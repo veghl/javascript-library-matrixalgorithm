@@ -2,6 +2,10 @@ export class Matrix {
     constructor(rows, cols) {
         this.rows = rows;
         this.cols = cols;
-        this.matrix = Array.from({ length: rows }, () => Array(cols).fill(0));
+        this.data = this.createMatrix();
+    }
+
+    createMatrix() {
+        return Array.from({ length: this.rows }, () => Array(this.cols).fill(0));
     }
 }
