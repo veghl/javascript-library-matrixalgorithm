@@ -1,10 +1,14 @@
 {
   "name": "Project",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Matrix-based algorithm interactive visualization",
+  "main": "src/index.js",
   "scripts": {
+    "start": "node server/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "private": true
+  "private": true,
+  "dependencies": {
+    "express": "^4.21.0"
+  }
 }
