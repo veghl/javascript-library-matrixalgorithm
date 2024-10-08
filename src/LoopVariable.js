@@ -1,4 +1,4 @@
-export default class LoopVariable {
+export class LoopVariable {
     constructor (name, initialValue) {
         this.name = name;
         this.value = initialValue;
