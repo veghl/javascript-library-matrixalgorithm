@@ -3,22 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>JS Library Matrix Algorithm Visualization</title>
+    <script src="src/index.js" type="module"></script>
+
+    <script>
+        window.addEventListener('load', () => {
+            // Ensure `inmaalvi` is defined
+            if (window.inmaalvi) {
+                const matrix = new inmaalvi.Matrix(3, 4);  // Creates a 3x4 matrix
+                console.log(matrix);  // Outputs the matrix object to the console
+                const canvas = new inmaalvi.CanvasRenderer("myCanvas");
+            } else {
+                console.error('inmaalvi is not available!');
+            }
+        });
+    </script>
 </head>
 <body>
   <h1>JS Library Matrix Algorithm Visualisation </h1>
-
-  <script src="src/index.js" type="module"></script>
-
-  <script>
-      window.addEventListener('load', () => {
-          // Ensure `inmaalvi` is defined
-          if (window.inmaalvi) {
-              const matrix = new inmaalvi.Matrix(3, 4);  // Creates a 3x4 matrix
-              console.log(matrix);  // Outputs the matrix object to the console
-          } else {
-              console.error('inmaalvi is not available!');
-          }
-      });
-  </script>
+    <canvas id="myCanvas" width="750" height="500" style="border:1px solid black"></canvas>
 </body>
 </html>
