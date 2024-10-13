@@ -1,5 +1,8 @@
-export class MatrixElement {
+import {Data} from "./Data.js";
+
+export class MatrixElement extends Data{
     constructor(value, x, y, size) {
+        super();
         this.value = value;
         this.x = x;
         this.y = y;

@@ -1,7 +1,11 @@
-export class Matrix {
-    constructor(rows, cols) {
-        this.rows = rows;
-        this.cols = cols;
+import {Data} from "./Data.js";
+
+export class Matrix extends Data{
+    constructor(name, values) {
+        super();
+        this.name = name;
+        this.rows = values.length;
+        this.cols = values[0].length;
         this.data = this.createMatrix();
     }
 

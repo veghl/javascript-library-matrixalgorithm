@@ -9,5 +9,7 @@ export class CanvasRenderer {
 
         this.controller = new inmaalvi.Controller();
         this.controller.ctx = this.ctx;
+
+        
     }
 }

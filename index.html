@@ -7,10 +7,9 @@
 
     <script>
         window.addEventListener('load', () => {
-            // Ensure `inmaalvi` is defined
             if (window.inmaalvi) {
-                const matrix = new inmaalvi.Matrix(3, 4);  // Creates a 3x4 matrix
-                console.log(matrix);  // Outputs the matrix object to the console
+                const matrix = new inmaalvi.Matrix(3, 4);
+                console.log(matrix);
                 const canvas = new inmaalvi.CanvasRenderer("myCanvas");
             } else {
                 console.error('inmaalvi is not available!');
