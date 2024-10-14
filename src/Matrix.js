@@ -1,6 +1,6 @@
-import {Data} from "./Data.js";
+import {MatrixData} from "./MatrixData.js";
 
-export class Matrix extends Data{
+export class Matrix extends MatrixData {
     constructor(name, values) {
         super();
         this.name = name;

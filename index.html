@@ -3,18 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>JS Library Matrix Algorithm Visualization</title>
-    <script src="src/index.js" type="module"></script>
 
-    <script>
-        window.addEventListener('load', () => {
-            if (window.inmaalvi) {
-                const matrix = new inmaalvi.Matrix(3, 4);
-                console.log(matrix);
-                const canvas = new inmaalvi.CanvasRenderer("myCanvas");
-            } else {
-                console.error('inmaalvi is not available!');
-            }
-        });
+
+    <script type="module">
+        import { matrixvis } from './src/index.js';
+
+
+        const canvas = new matrixvis.CanvasRenderer("myCanvas");
+        const a = new matrixvis.MatrixElement("a", 5);
+        a.x = 5;
+        a.y = 4;
+
+        canvas.add(a, "a");
+        const b = new matrixvis.MatrixElement("a", 5);
+        b.x = 6;
+        b.y = 3;
+        canvas.add(b, "b")
+
     </script>
 </head>
 <body>

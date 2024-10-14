@@ -1,13 +1,14 @@
 import {Matrix} from "./Matrix.js";
 import {CanvasRenderer} from "./CanvasRenderer.js";
 import {Controller} from "./Controller.js";
-import {Data} from "./Data.js";
+import {MatrixData} from "./MatrixData.js";
+import {MatrixElement} from "./MatrixElements.js";
 
-const inmaalvi = {
+export const matrixvis = {
     Matrix,
+    MatrixElement,
     CanvasRenderer,
     Controller,
-    Data,
+    MatrixData,
 }
 
-window.inmaalvi = inmaalvi;
