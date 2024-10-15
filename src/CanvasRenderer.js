@@ -11,8 +11,17 @@ export class CanvasRenderer {
 
         //this.controller = new matrixvis.Controller();
         //this.controller.ctx = this.ctx;
-        
+        this.render = (evt) => {
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+            for (const matrixItem of Object.values(this.matrixItems)) {
+                if(typeof matrixItem.render === 'function') {
+                    matrixItem.render();
+                }
+            }
+        }
     }
+
 
     add(matrixData, id) {
         if (this.matrixItems[id] !== undefined) {

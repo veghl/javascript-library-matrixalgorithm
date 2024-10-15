@@ -11,17 +11,24 @@ export class MatrixElement extends MatrixData {
         this.changeable = changeable;
         this.minValue = 0;
         this.maxValue = 0;
-        this.width = 25;
-        this.height = 25;
+        this.width = 30; //default width of the variable
+        this.height = 30; //default height of the variable
 
+        this.defaultColor = '#DEE';
+        this.redColor = '#FF0000';
+        this.greenColor = '#00FF00';
+        this.grayColor = '#999999';
+        this.strokeColor = '#000000';
     }
 
     render(ctx) {
-        this.ctx.fillStyle = "#DEE";
+        this.ctx.fillStyle = this.defaultColor;
         this.ctx.fillRect(this.x, this.y, this.width, this.height);
+        this.ctx.strokeStyle = this.strokeColor;
+        this.ctx.strokeRect(this.x, this.y, this.width, this.height);
 
-        this.ctx.fillStyle = "#000";
-        this.ctx.font = "14p Arial";
+        this.ctx.fillStyle = this.strokeColor;
+        this.ctx.font = "16px Arial";
         this.ctx.textAlign = "center";
         this.ctx.textBaseline = "middle";
 

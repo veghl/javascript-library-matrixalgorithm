@@ -10,15 +10,20 @@
 
 
         const canvas = new matrixvis.CanvasRenderer("myCanvas");
-        const a = new matrixvis.MatrixElement("a", 5);
-        a.x = 5;
-        a.y = 4;
+        const a = new matrixvis.MatrixElement("a", 100);
+        a.x = 100;
+        a.y = 100;
 
         canvas.add(a, "a");
         const b = new matrixvis.MatrixElement("a", 5);
-        b.x = 6;
-        b.y = 3;
+        b.x = 50;
+        b.y = 50;
         canvas.add(b, "b")
+
+        const matrix = new matrixvis.Matrix("matrix", [[0,0,1],[1,2,3],[0,0,0]])
+        matrix.x= 0;
+        matrix.y= 0;
+        canvas.render();
 
     </script>
 </head>
