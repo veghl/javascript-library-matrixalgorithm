@@ -20,6 +20,10 @@ export class CanvasRenderer {
                 }
             }
         }
+
+        this.get = (id) => {
+            return this.matrixItems[id];
+        }
     }
 
 
@@ -29,8 +33,6 @@ export class CanvasRenderer {
         } else if (matrixData.id !== undefined) {
             throw new Error(`This object was already added to the canvas with ID: ${matrixData.id} .`);
         }
-        console.log(Object.isFrozen(matrixData));
-        console.log(Object.getOwnPropertyDescriptor(matrixData, 'ctx'));
         matrixData.ctx = this.ctx;
         matrixData.id = id;
         this.matrixItems[id] = matrixData;
