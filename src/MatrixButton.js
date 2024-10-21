@@ -5,19 +5,45 @@ export class MatrixButton extends MatrixData{
         super();
         this.x = 0;
         this.y = 0;
+        this.text = text;
         this.width = width;
-        this.height = 30;
+        this.height = 26;
         this.enabled = true;
         this.clicked = false;
         this.clickFcn = clickFcn;
 
+        this.font = "bold 16px Arial";
+        this.strokeColor = "#FFF";
+        this.defaultColor = "#579F6E";
+        this.disabledColor = "#999";
     }
 
     render(ctx) {
         if (this.width > 0) {
             if (this.enabled === true) {
-
+                this.ctx.fillStyle = this.defaultColor;
+            } else {
+                this.ctx.fillStyle = this.disabledColor;
             }
+            this.ctx.fillRect(this.x - this.width / 2, this.y - this.height / 2, this.width, this.height);
+            this.ctx.strokeStyle = this.defaultColor;
+            this.ctx.strokeRect(this.x - this.width / 2 - 0.5 , this.y - this.height / 2 - 0.5, this.width + 1, this.height + 1);
+            if (this.enabled === true) {
+                this.ctx.fillStyle = this.strokeColor;
+            } else {
+                this.ctx.fillStyle = "#000";
+            }
+            this.ctx.font = this.font;
+            this.ctx.textAlign = "center";
+            this.ctx.textBaseline = "middle";
+            this.ctx.fillText(this.text, this.x, this.y);
         }
+    }
+
+    isOver(x,y) {
+        if (this.width > 0 && Math.abs(x - this.x) <= this.width && Math.abs(y - this.y) <= this.height) {
+            return true;
+        }
+        return false;
     }
 }

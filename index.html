@@ -13,19 +13,25 @@
         const max = new matrixvis.MatrixElement("max", 100);
         max.x = 100;
         max.y = 100;
-
         canvas.add(max, "max");
-        const min = new matrixvis.MatrixElement("min", 5);
-        min.x = 50;
-        min.y = 50;
+
+        const min = new matrixvis.MatrixElement("min", 5, false, true);
+        min.x = 200;
+        min.y = 200;
+        min.width = 100;
+        min.height = 100
         canvas.add(min, "min")
 
         const matrix = new matrixvis.Matrix("matrix", [[0,0,1],[1,2,3],[0,0,0]])
         matrix.x= 0;
         matrix.y= 0;
-
         const getting = canvas.get("min");
         console.log(getting);
+
+        const button = new matrixvis.MatrixButton("Start", 70, "a");
+        button.x = 300;
+        button.y = 300;
+        canvas.add(button, "button");
         canvas.render();
 
     </script>
