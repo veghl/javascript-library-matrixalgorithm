@@ -45,8 +45,6 @@ export class MatrixElement extends MatrixData {
         }
     }
 
-
-
     updateValue(newValue) {
         this.value = newValue;
     }
