@@ -11,22 +11,29 @@ export class MatrixElement extends MatrixData {
         }
         this.name = name;
         this.value = value;
+        this.maxValue = 1000;
+        this.minValue = -999;
+
         this.changeable = changeable;
         this.showLabel = showLabel;
-        this.minValue = 0;
-        this.maxValue = 0;
-        this.width = 31; //default width of the variable
-        this.height = 31; //default height of the variable
+        this.minSize = 35;
+        this.maxSize = 100;
+        this.width = 35; //default width of the element
+        this.height = 35; //default height of the element
+        this.fillColor = '#EEE';
+        this.strokeColor = '#000';
 
-        this.defaultColor = '#DEE';
-        this.redColor = '#FF0000';
-        this.greenColor = '#00FF00';
+        this.defaultColor = '#EEE';
+        this.greenColor = '#579F6E';
         this.grayColor = '#999999';
-        this.strokeColor = '#000000';
+        this.blackColor = '#000';
+
+        this.originalFillColor = "#EEE";
+        this.originalStrokeColor = "#000";
     }
 
-    render(ctx) {
-        this.ctx.fillStyle = this.defaultColor;
+    render() {
+        this.ctx.fillStyle = this.fillColor;
         this.ctx.fillRect(this.x - this.width / 2, this.y - this.height / 2, this.width, this.height);
         this.ctx.strokeStyle = this.strokeColor;
         this.ctx.strokeRect(this.x - this.width / 2 - 0.5, this.y - this.height / 2 - 0.5, this.width + 1, this.height + 1);
@@ -45,7 +52,53 @@ export class MatrixElement extends MatrixData {
         }
     }
 
+    // set random value to element
+    randomize(min, max) {
+        min = typeof min === "undefined" ? this.minValue : min;
+        max = typeof max === "undefined" ? this.maxValue : max;
+        if (min > max) {
+            [min, max] = [max, min];
+        }
+        this.value = Math.floor(Math.random() * (max - min) + min);
+    }
+
+    setSize(width, height) {
+        if (typeof width !== 'number' || typeof height !== 'number' || width <= 0 || height <= 0) {
+            console.warn("Invalid width or height specified. Both must be positive numbers.");
+            return;
+        }
+
+        if (width > this.maxSize) {
+            console.warn(`Width exceeds maximum allowed size of ${this.maxSize}. Setting width to ${this.maxSize}.`);
+            width = this.maxSize;
+        }
+        if (height > this.maxSize) {
+            console.warn(`Height exceeds maximum allowed size of ${this.maxSize}. Setting height to ${this.maxSize}.`);
+            height = this.maxSize;
+        }
+        this.height = height;
+        this.width = width;
+    }
+
     updateValue(newValue) {
         this.value = newValue;
+    }
+
+    // setting colors of MatrixElement
+
+    setDefaultColor() {
+        this.fillColor = this.defaultColor;
+        this.strokeColor = this.blackColor;
+    }
+    // setting color to green, when something is done
+    setGreenColor(){
+        this.fillColor = this.greenColor;
+        this.strokeColor = '#FFF';
+    }
+
+    //setting color to grey
+    setGrayColor(){
+        this.fillColor = this.grayColor;
+        this.strokeColor = this.blackColor;
     }
 }

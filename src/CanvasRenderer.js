@@ -20,7 +20,7 @@ export class CanvasRenderer {
             this.controller.render();
             for (const matrixItem of Object.values(this.matrixItems)) {
                 if(typeof matrixItem.render === 'function') {
-                    matrixItem.render();
+                    matrixItem.render(this.ctx);
                 }
             }
         }

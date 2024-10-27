@@ -10,26 +10,25 @@
 
 
         const canvas = new matrixvis.CanvasRenderer("myCanvas");
-        const max = new matrixvis.MatrixElement("max", 100);
-        max.x = 100;
+        const max = new matrixvis.MatrixElement("max", 999, false, true);
+        max.x = 75;
         max.y = 100;
+        max.setSize(50,50)
         canvas.add(max, "max");
 
         const min = new matrixvis.MatrixElement("min", 5, false, true);
-        min.x = 200;
-        min.y = 200;
-        min.width = 100;
-        min.height = 100
-        canvas.add(min, "min")
+        min.x = 75;
+        min.y = 175;
+        min.setSize(50,50)
+        min.randomize(0, 3);
+        canvas.add(min, "min");
 
-        const matrix = new matrixvis.Matrix("matrix", [[0,0,1],[1,2,3],[0,0,0]])
-        matrix.x= 0;
-        matrix.y= 0;
-
-        const button = new matrixvis.MatrixButton("Start", 70, "a");
-        button.x = 300;
-        button.y = 300;
-        canvas.add(button, "button");
+        const A = new matrixvis.Matrix("A", [[0,0,1],[1,2,3],[0,0,0]])
+        A.x= 350;
+        A.y= 105;
+        A.setSize(45,45);
+        A.randomize(0,50);
+        canvas.add(A, "A");
         canvas.render();
 
     </script>
