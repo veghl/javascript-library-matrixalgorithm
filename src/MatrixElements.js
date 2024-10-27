@@ -67,7 +67,6 @@ export class MatrixElement extends MatrixData {
             console.warn("Invalid width or height specified. Both must be positive numbers.");
             return;
         }
-
         if (width > this.maxSize) {
             console.warn(`Width exceeds maximum allowed size of ${this.maxSize}. Setting width to ${this.maxSize}.`);
             width = this.maxSize;

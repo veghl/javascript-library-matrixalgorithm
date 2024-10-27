@@ -23,11 +23,11 @@
         min.randomize(0, 3);
         canvas.add(min, "min");
 
-        const A = new matrixvis.Matrix("A", [[0,0,1],[1,2,3],[0,0,0]])
-        A.x= 350;
+        const A = new matrixvis.Matrix("A", [[0,0,0,0,0],[],[],[],[]])
+        A.x= 200;
         A.y= 105;
-        A.setSize(45,45);
-        A.randomize(0,50);
+        A.setSize(40,40);
+        A.randomize(0,20);
         canvas.add(A, "A");
         canvas.render();
 
