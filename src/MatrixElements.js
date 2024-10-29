@@ -16,7 +16,12 @@ export class MatrixElement extends MatrixData {
 
         this.changeable = changeable;
         this.showLabel = showLabel;
-        this.minSize = 35;
+        this.changing = false;
+        this.copy = false;
+        this.copyx = 0;
+        this.copyy = 0;
+        this.compare = false;
+        this.minSize = 30;
         this.maxSize = 100;
         this.width = 35; //default width of the element
         this.height = 35; //default height of the element
@@ -50,6 +55,16 @@ export class MatrixElement extends MatrixData {
             this.ctx.textBaseline = "alphabetic";
             this.ctx.fillText(this.name, this.x, this.y - this.height /2 - 5);
         }
+        if (this.compare) {
+            this.ctx.fillStyle = "#FFF"
+            this.ctx.globalAlpha = 0.5;
+            const textSize = (this.width + this.height) /2;
+            this.ctx.font = "bold " + textSize + "px serif";
+            this.ctx.textAlign = "center";
+            this.ctx.textBaseline = "middle";
+            this.ctx.fillText("?", this.x, this.y);
+            this.ctx.globalAlpha = 1;
+        }
     }
 
     // set random value to element
@@ -75,14 +90,28 @@ export class MatrixElement extends MatrixData {
             console.warn(`Height exceeds maximum allowed size of ${this.maxSize}. Setting height to ${this.maxSize}.`);
             height = this.maxSize;
         }
+        if (width < this.minSize) {
+            console.warn(`Width exceeds maximum allowed size of ${this.maxSize}. Setting width to ${this.minSize}.`);
+            width = this.minSize;
+        }
+        if (height < this.minSize) {
+            console.warn(`Height exceeds maximum allowed size of ${this.maxSize}. Setting height to ${this.minSize}.`);
+            height = this.minSize;
+        }
         this.height = height;
         this.width = width;
     }
 
-    updateValue(newValue) {
-        this.value = newValue;
+    isOver(x,y) {
+        if (this.width > 0 && Math.abs(x - this.x) <= this.width && Math.abs(y - this.y) <= this.height) {
+            return true;
+        }
+        return false;
     }
 
+    updateValue(value){
+        this.value = value;
+    }
     // setting colors of MatrixElement
 
     setDefaultColor() {
@@ -93,6 +122,11 @@ export class MatrixElement extends MatrixData {
     setGreenColor(){
         this.fillColor = this.greenColor;
         this.strokeColor = '#FFF';
+    }
+    // setting color to lightblue when comparing
+    setCompareColor() {
+        this.fillColor = '#F9B900'; // light blue for comparing
+        this.strokeColor = this.blackColor;
     }
 
     //setting color to grey

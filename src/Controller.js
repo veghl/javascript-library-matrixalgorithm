@@ -6,6 +6,8 @@ export class Controller {
         this.x = 0;
         this.y = 0;
         this.ctx = ctx;
+        this.isPlaying = false;
+        this.isWaiting = false;
 
         //Controller labels
         this.resetLabel = "Reset";
@@ -16,7 +18,7 @@ export class Controller {
         this.nextSingleLabel = "►";
         this.nextLabel = "►►";
 
-        this.reset = new matrixvis.MatrixButton(this.resetLabel, 70,);
+        this.reset = new matrixvis.MatrixButton(this.resetLabel, 70);
         this.startStop = new matrixvis.MatrixButton(this.startLabel, 70);
         this.prevStep = new matrixvis.MatrixButton(this.prevLabel, 70,);
         this.nextStep = new matrixvis.MatrixButton(this.nextLabel, 70);
@@ -26,13 +28,15 @@ export class Controller {
         this.reset.enabled = false;
         this.prevStep.enabled = false;
         this.prevSingleStep.enabled = false;
+
+
     }
 
     render() {
-        // Draw a line above the buttons
+        //line above buttons
         this.ctx.beginPath();
         this.ctx.strokeStyle = "#000";
-        this.ctx.moveTo(0, this.y - 40 + 0.5);
+        this.ctx.moveTo(0, this.y - 30 + 0.5);
         this.ctx.lineTo(this.ctx.canvas.clientWidth, this.y - 40 + 0.5);
         this.ctx.stroke();
 
@@ -53,7 +57,7 @@ export class Controller {
                 button.x = this.x + button.width / 2 + spaceWidth;
                 button.y = this.y;
                 button.render();
-                spaceWidth += button.width + 10; // Add space between buttons
+                spaceWidth += button.width + 10; //space between buttons
             }
         });
     }

@@ -12,9 +12,11 @@ export class CanvasRenderer {
 
         this.controller = new matrixvis.Controller(this.ctx);
         this.controller.x =this.canvas.width / 6;
-        this.controller.y = this.ctx.canvas.height - 40;
+        this.controller.y = this.ctx.canvas.height - 30;
 
-        this.canvas.addEventListener("mousemove", this.mouseMoveEvent);
+        this.canvas.addEventListener("mousemove", (event) =>this.mouseMoveEvent);
+
+
         this.render = (evt) => {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
             this.controller.render();
@@ -27,8 +29,9 @@ export class CanvasRenderer {
     }
 
 
-    mouseMoveEvent = (event) => {
-
+    mouseMoveEvent(event){
+        
+        console.log("Mouse moved: ", event);
     }
 
     get = (id) => {
@@ -45,7 +48,6 @@ export class CanvasRenderer {
         matrixData.ctx = this.ctx;
         matrixData.id = id;
         this.matrixItems[id] = matrixData;
-        console.log(this.matrixItems);
     }
 
 
