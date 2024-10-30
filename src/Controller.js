@@ -32,12 +32,12 @@ export class Controller {
 
     }
 
-    render() {
+    render = () => {
         //line above buttons
         this.ctx.beginPath();
         this.ctx.strokeStyle = "#000";
         this.ctx.moveTo(0, this.y - 30 + 0.5);
-        this.ctx.lineTo(this.ctx.canvas.clientWidth, this.y - 40 + 0.5);
+        this.ctx.lineTo(this.ctx.canvas.clientWidth, this.y - 30 + 0.5);
         this.ctx.stroke();
 
         // Draw the buttons

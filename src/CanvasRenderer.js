@@ -6,18 +6,19 @@ export class CanvasRenderer {
         this.canvas = document.getElementById(canvasId);
         this.canvas.parent = this;
         this.ctx = this.canvas.getContext('2d');
-
+        this.fps = 24;
         this.matrixItems = {};
         this.vars = {};
+        setInterval(() => this.render(), 1000 / this.fps);
+
 
         this.controller = new matrixvis.Controller(this.ctx);
         this.controller.x =this.canvas.width / 6;
         this.controller.y = this.ctx.canvas.height - 30;
 
-        this.canvas.addEventListener("mousemove", (event) =>this.mouseMoveEvent);
+        this.canvas.addEventListener("mousemove", (e) =>this.mouseMoveEvent(e));
 
-
-        this.render = (evt) => {
+        this.render = (e) => {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
             this.controller.render();
             for (const matrixItem of Object.values(this.matrixItems)) {
@@ -25,13 +26,28 @@ export class CanvasRenderer {
                     matrixItem.render(this.ctx);
                 }
             }
+
         }
+
     }
 
-
-    mouseMoveEvent(event){
-        
-        console.log("Mouse moved: ", event);
+    mouseMoveEvent = (e) => {
+        const canvasRect = this.canvas.getBoundingClientRect();
+        const mouseX = e.clientX - canvasRect.left;
+        const mouseY = e.clientY - canvasRect.top;
+        let mouseCursor = "default";
+        for (const obj of Object.values(this.controller)) {
+            if (obj instanceof matrixvis.MatrixButton && obj.enabled) {
+                if (obj.isOver(mouseX, mouseY)) {
+                    obj.color = obj.overColor;
+                    mouseCursor = "pointer";
+                }
+                else {
+                    obj.color = obj.defaultColor;
+                }
+            }
+        }
+        e.target.style.cursor = mouseCursor;
     }
 
     get = (id) => {
@@ -39,7 +55,7 @@ export class CanvasRenderer {
     }
 
 
-    add(matrixData, id) {
+    add = (matrixData, id) => {
         if (this.matrixItems[id] !== undefined) {
             throw new Error(`Cannot add matrixItem ${id}, object with this id already exists.`);
         } else if (matrixData.id !== undefined) {

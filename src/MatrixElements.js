@@ -37,7 +37,7 @@ export class MatrixElement extends MatrixData {
         this.originalStrokeColor = "#000";
     }
 
-    render() {
+    render = () => {
         this.ctx.fillStyle = this.fillColor;
         this.ctx.fillRect(this.x - this.width / 2, this.y - this.height / 2, this.width, this.height);
         this.ctx.strokeStyle = this.strokeColor;
@@ -68,7 +68,7 @@ export class MatrixElement extends MatrixData {
     }
 
     // set random value to element
-    randomize(min, max) {
+    randomize = (min, max) => {
         min = typeof min === "undefined" ? this.minValue : min;
         max = typeof max === "undefined" ? this.maxValue : max;
         if (min > max) {
@@ -77,7 +77,7 @@ export class MatrixElement extends MatrixData {
         this.value = Math.floor(Math.random() * (max - min) + min);
     }
 
-    setSize(width, height) {
+    setSize = (width, height) => {
         if (typeof width !== 'number' || typeof height !== 'number' || width <= 0 || height <= 0) {
             console.warn("Invalid width or height specified. Both must be positive numbers.");
             return;
@@ -102,35 +102,34 @@ export class MatrixElement extends MatrixData {
         this.width = width;
     }
 
-    isOver(x,y) {
+    isOver = (x,y) => {
         if (this.width > 0 && Math.abs(x - this.x) <= this.width && Math.abs(y - this.y) <= this.height) {
             return true;
         }
         return false;
     }
 
-    updateValue(value){
+    updateValue = (value) => {
         this.value = value;
     }
-    // setting colors of MatrixElement
 
-    setDefaultColor() {
+    // setting colors of MatrixElement
+    setDefaultColor = () => {
         this.fillColor = this.defaultColor;
         this.strokeColor = this.blackColor;
     }
     // setting color to green, when something is done
-    setGreenColor(){
+    setGreenColor = () =>{
         this.fillColor = this.greenColor;
         this.strokeColor = '#FFF';
     }
     // setting color to lightblue when comparing
-    setCompareColor() {
+    setCompareColor = () => {
         this.fillColor = '#F9B900'; // light blue for comparing
         this.strokeColor = this.blackColor;
     }
-
     //setting color to grey
-    setGrayColor(){
+    setGrayColor = () => {
         this.fillColor = this.grayColor;
         this.strokeColor = this.blackColor;
     }

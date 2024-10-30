@@ -20,7 +20,7 @@ export class Matrix extends MatrixData {
 
     }
 
-    render() {
+    render = () => {
         const indexOffset = 10;
         const gap = 1;
         // render col indexes
@@ -64,7 +64,7 @@ export class Matrix extends MatrixData {
 
     }
 
-    randomize (min, max) {
+    randomize = (min, max) => {
         for (let i = 0; i < this.data.length; i++){
             for (let j = 0; j < this.data[i].length; j++){
                 const element = this.data[i][j];
@@ -73,7 +73,7 @@ export class Matrix extends MatrixData {
         }
     }
 
-    createMatrix(values) {
+    createMatrix = (values) => {
         const matrix = [];
         for (let i = 0; i < this.rows; i++){
             const row = [];
@@ -88,7 +88,7 @@ export class Matrix extends MatrixData {
         return matrix;
     }
 
-    setSize(width, height) {
+    setSize = (width, height) => {
         const MAX_WIDTH = 50;   // example maximum width
         const MAX_HEIGHT = 50;
 
