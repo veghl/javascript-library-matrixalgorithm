@@ -102,11 +102,14 @@ export class MatrixElement extends MatrixData {
         this.width = width;
     }
 
-    isOver = (x,y) => {
-        if (this.width > 0 && Math.abs(x - this.x) <= this.width && Math.abs(y - this.y) <= this.height) {
-            return true;
-        }
-        return false;
+    isOver = (x, y) => {
+        return (
+            this.width > 0 &&
+            x >= this.x - this.width / 2 &&
+            x <= this.x + this.width / 2 &&
+            y >= this.y - this.height / 2 &&
+            y <= this.y + this.height / 2
+        );
     }
 
     updateValue = (value) => {
@@ -117,6 +120,10 @@ export class MatrixElement extends MatrixData {
     setDefaultColor = () => {
         this.fillColor = this.defaultColor;
         this.strokeColor = this.blackColor;
+    }
+    // setting color when object is changeable and mouse is over
+    setDefaultOverColor = () => {
+        this.fillColor = "#CCC"
     }
     // setting color to green, when something is done
     setGreenColor = () =>{

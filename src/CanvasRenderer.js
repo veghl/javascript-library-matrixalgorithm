@@ -16,7 +16,9 @@ export class CanvasRenderer {
         this.controller.x =this.canvas.width / 6;
         this.controller.y = this.ctx.canvas.height - 30;
 
-        this.canvas.addEventListener("mousemove", (e) =>this.mouseMoveEvent(e));
+        this.canvas.addEventListener("mousemove", (e) => this.mouseMoveEvent(e));
+        this.canvas.addEventListener("mousedown", (e) => this.mouseDownEvent(e));
+        this.canvas.addEventListener("mouseup", (e) => this.mouseUpEvent(e));
 
         this.render = (e) => {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -47,7 +49,88 @@ export class CanvasRenderer {
                 }
             }
         }
+
+        for(const obj of Object.values(this.matrixItems)) {
+            // check element
+            if (obj instanceof matrixvis.MatrixElement) {
+                if (obj.changeable && obj.isOver(mouseX, mouseY)) {
+                    mouseCursor = "pointer";
+                }
+            }
+            // check matrix
+            if (obj instanceof matrixvis.Matrix) {
+                for (let i = 0; i < obj.data.length; i++) {
+                    for (let j = 0 ; j < obj.data[i].length; j++){
+                        if (obj.data[i][j].changeable && obj.data[i][j].isOver(mouseX, mouseY)) {
+                            obj.data[i][j].setDefaultOverColor();
+                            mouseCursor = "pointer";
+                        } else {
+                            obj.data[i][j].setDefaultColor();
+                        }
+                    }
+                }
+            }
+            // check button
+            if (obj instanceof matrixvis.MatrixButton && obj.enabled) {
+                if (obj.isOver(mouseX, mouseY)) {
+                    obj.color = obj.overColor;
+                    mouseCursor = "pointer";
+                }
+                else {
+                    obj.color = obj.defaultColor;
+                }
+            }
+        }
         e.target.style.cursor = mouseCursor;
+    }
+
+    mouseDownEvent = (e) => {
+        if (e.button === 0) {
+            const canvasRect = this.canvas.getBoundingClientRect();
+            const mouseX = e.clientX - canvasRect.left;
+            const mouseY = e.clientY - canvasRect.top;
+            for (const obj of Object.values(this.controller)) {
+                if (obj instanceof matrixvis.MatrixButton && obj.enabled) {
+                    if (obj.isOver(mouseX, mouseY)) {
+                        console.log(obj);
+                        obj.clicked = true;
+                    }
+                }
+            }
+
+            for (const obj of Object.values(this.matrixItems)) {
+                if (obj instanceof matrixvis.MatrixElement) {
+                    if (obj.changeable && obj.isOver(mouseX, mouseY)) {
+                        console.log(obj);
+                    }
+                }
+
+                if (obj instanceof matrixvis.Matrix) {
+                    for (let i = 0; i < obj.data.length; i++) {
+                        for (let j = 0 ; j < obj.data[i].length; j++){
+                            if (obj.data[i][j].changeable && obj.data[i][j].isOver(mouseX, mouseY)) {
+                                console.log(obj.data[i][j]);
+                            }
+                        }
+                    }
+                }
+
+                if (obj instanceof matrixvis.MatrixButton && obj.enabled) {
+                    if (obj.isOver(mouseX, mouseY)) {
+                        console.log(obj);
+                    }
+                }
+            }
+
+        }
+    }
+
+    mouseUpEvent = (e) => {
+        if (e.button === 0) {
+            const canvasRect = this.canvas.getBoundingClientRect();
+            const mouseX = e.clientX - canvasRect.left;
+            const mouseY = e.clientY - canvasRect.top;
+        }
     }
 
     get = (id) => {

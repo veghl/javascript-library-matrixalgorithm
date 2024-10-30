@@ -28,8 +28,6 @@ export class Controller {
         this.reset.enabled = false;
         this.prevStep.enabled = false;
         this.prevSingleStep.enabled = false;
-
-
     }
 
     render = () => {
