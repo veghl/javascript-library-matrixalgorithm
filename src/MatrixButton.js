@@ -20,7 +20,7 @@ export class MatrixButton extends MatrixData{
         this.overColor = "#357D4B";
     }
 
-    render = (ctx) => {
+    render(ctx) {
         if (this.width > 0) {
             if (this.enabled === true) {
                 this.ctx.fillStyle = this.color;

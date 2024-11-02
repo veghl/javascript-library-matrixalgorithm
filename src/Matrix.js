@@ -8,25 +8,24 @@ export class Matrix extends MatrixData {
             changeable = false;
         }
         this.name = name;
-        this.minValue = -999;
-        this.maxValue = 1000;
+        this.minValue = -99;
+        this.maxValue = 100;
         this.rows = values.length;
         this.cols = values[0].length;
         this.changeable = changeable;
         this.showIndexes = true;
 
-        this.data = this.createMatrix(values);
-        console.log(this.data);
-
+        this.elements = this.createMatrix(values);
+        console.log(this.elements);
     }
 
-    render = () => {
+    render() {
         const indexOffset = 10;
         const gap = 1;
         // render col indexes
         for(let j = 0; j < this.cols; j++) {
-            const x = this.x + j * (this.data[0][j].width + (gap / 2));
-            const y = this.y - (this.data[0][0].height / 2 ) - indexOffset;
+            const x = this.x + j * (this.elements[0][j].width + (gap / 2));
+            const y = this.y - (this.elements[0][0].height / 2 ) - indexOffset;
             this.ctx.fillStyle = "#888";
             this.ctx.font = "14px Arial";
             this.ctx.textAlign = "center";
@@ -35,8 +34,8 @@ export class Matrix extends MatrixData {
         }
         // render row indexes
         for (let i = 0; i < this.rows; i++) {
-            const x = this.x - (this.data[0][0].width / 2 ) - indexOffset;
-            const y = this.y + i * (this.data[i][0].height + (gap / 2));
+            const x = this.x - (this.elements[0][0].width / 2 ) - indexOffset;
+            const y = this.y + i * (this.elements[i][0].height + (gap / 2));
             this.ctx.fillStyle = "#888";
             this.ctx.font = "14px Arial";
             this.ctx.textAlign = "center";
@@ -44,18 +43,18 @@ export class Matrix extends MatrixData {
             this.ctx.fillText(i.toString(), x, y);
         }
 
-        for(let i = 0; i < this.data.length; i++){
-            for (let j = 0; j < this.data[i].length; j++){
-                this.data[i][j].ctx = this.ctx;
-                const element = this.data[i][j];
+        for(let i = 0; i < this.elements.length; i++){
+            for (let j = 0; j < this.elements[i].length; j++){
+                this.elements[i][j].ctx = this.ctx;
+                const element = this.elements[i][j];
                 element.x = this.x + j * (element.width + gap);
                 element.y = this.y + i * (element.height + gap);
                 element.render();
             }
         }
 
-        const centerX = this.x + (this.cols - 1) * (this.data[0][0].width + gap) / 2;
-        const bottomY = this.y + this.rows * (this.data[0][0].height + gap) - (this.data[0][0].height / 5);
+        const centerX = this.x + (this.cols - 1) * (this.elements[0][0].width + gap) / 2;
+        const bottomY = this.y + this.rows * (this.elements[0][0].height + gap) - (this.elements[0][0].height / 5);
         this.ctx.fillStyle = "#888";
         this.ctx.font = "14px Arial";
         this.ctx.textAlign = "center";
@@ -65,15 +64,15 @@ export class Matrix extends MatrixData {
     }
 
     randomize = (min, max) => {
-        for (let i = 0; i < this.data.length; i++){
-            for (let j = 0; j < this.data[i].length; j++){
-                const element = this.data[i][j];
+        for (let i = 0; i < this.elements.length; i++){
+            for (let j = 0; j < this.elements[i].length; j++){
+                const element = this.elements[i][j];
                 element.randomize(min, max);
             }
         }
     }
 
-    createMatrix = (values) => {
+    createMatrix(values) {
         const matrix = [];
         for (let i = 0; i < this.rows; i++){
             const row = [];
@@ -88,7 +87,7 @@ export class Matrix extends MatrixData {
         return matrix;
     }
 
-    setSize = (width, height) => {
+    setSize(width, height) {
         const MAX_WIDTH = 50;   // example maximum width
         const MAX_HEIGHT = 50;
 
@@ -107,9 +106,9 @@ export class Matrix extends MatrixData {
             height = MAX_HEIGHT;
         }
 
-        for(let i = 0; i < this.data.length; i++){
-            for (let j = 0; j < this.data[i].length; j++){
-                const element = this.data[i][j];
+        for(let i = 0; i < this.elements.length; i++){
+            for (let j = 0; j < this.elements[i].length; j++){
+                const element = this.elements[i][j];
                 element.width = width;
                 element.height = height;
             }

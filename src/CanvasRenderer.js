@@ -11,7 +11,6 @@ export class CanvasRenderer {
         this.vars = {};
         setInterval(() => this.render(), 1000 / this.fps);
 
-
         this.controller = new matrixvis.Controller(this.ctx);
         this.controller.x =this.canvas.width / 6;
         this.controller.y = this.ctx.canvas.height - 30;
@@ -55,17 +54,24 @@ export class CanvasRenderer {
             if (obj instanceof matrixvis.MatrixElement) {
                 if (obj.changeable && obj.isOver(mouseX, mouseY)) {
                     mouseCursor = "pointer";
+                    obj.setDefaultOverColor();
+                } else if (obj.comparing || obj.copying) {
+                    obj.setCompareColor();
+                } else {
+                    obj.setDefaultColor();
                 }
             }
             // check matrix
             if (obj instanceof matrixvis.Matrix) {
-                for (let i = 0; i < obj.data.length; i++) {
-                    for (let j = 0 ; j < obj.data[i].length; j++){
-                        if (obj.data[i][j].changeable && obj.data[i][j].isOver(mouseX, mouseY)) {
-                            obj.data[i][j].setDefaultOverColor();
+                for (let i = 0; i < obj.elements.length; i++) {
+                    for (let j = 0 ; j < obj.elements[i].length; j++){
+                        if (obj.elements[i][j].changeable && obj.elements[i][j].isOver(mouseX, mouseY)) {
+                            obj.elements[i][j].setDefaultOverColor();
                             mouseCursor = "pointer";
+                        }else if (obj.elements[i][j].comparing || obj.elements[i][j].copying) {
+                            obj.elements[i][j].setCompareColor();
                         } else {
-                            obj.data[i][j].setDefaultColor();
+                            obj.elements[i][j].setDefaultColor();
                         }
                     }
                 }
@@ -92,8 +98,8 @@ export class CanvasRenderer {
             for (const obj of Object.values(this.controller)) {
                 if (obj instanceof matrixvis.MatrixButton && obj.enabled) {
                     if (obj.isOver(mouseX, mouseY)) {
-                        console.log(obj);
                         obj.clicked = true;
+                        console.log(obj);
                     }
                 }
             }
@@ -106,10 +112,10 @@ export class CanvasRenderer {
                 }
 
                 if (obj instanceof matrixvis.Matrix) {
-                    for (let i = 0; i < obj.data.length; i++) {
-                        for (let j = 0 ; j < obj.data[i].length; j++){
-                            if (obj.data[i][j].changeable && obj.data[i][j].isOver(mouseX, mouseY)) {
-                                console.log(obj.data[i][j]);
+                    for (let i = 0; i < obj.elements.length; i++) {
+                        for (let j = 0 ; j < obj.elements[i].length; j++){
+                            if (obj.elements[i][j].changeable && obj.elements[i][j].isOver(mouseX, mouseY)) {
+                                console.log(obj.elements[i][j]);
                             }
                         }
                     }
@@ -130,15 +136,34 @@ export class CanvasRenderer {
             const canvasRect = this.canvas.getBoundingClientRect();
             const mouseX = e.clientX - canvasRect.left;
             const mouseY = e.clientY - canvasRect.top;
+            for (const obj of Object.values(this.controller)) {
+                if (obj instanceof matrixvis.MatrixButton && obj.enabled) {
+                    if (obj.isOver(mouseX, mouseY) && obj.clicked) {
+                        console.log(obj);
+                        obj.clicked = false;
+                    }
+                }
+            }
+            for (const obj of Object.values(this.matrixItems)) {
+                if (obj instanceof matrixvis.MatrixElement) {
+                    if (obj.changeable && obj.isOver(mouseX, mouseY)) {
+                        console.log(obj);
+                    }
+                }
+                if (obj instanceof matrixvis.Matrix) {
+                    for (let i = 0; i < obj.elements.length; i++) {
+                        for (let j = 0 ; j < obj.elements[i].length; j++){
+                            if (obj.elements[i][j].changeable && obj.elements[i][j].isOver(mouseX, mouseY)) {
+                                console.log(obj.elements[i][j]);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
-    get = (id) => {
-        return this.matrixItems[id];
-    }
-
-
-    add = (matrixData, id) => {
+    add(matrixData, id) {
         if (this.matrixItems[id] !== undefined) {
             throw new Error(`Cannot add matrixItem ${id}, object with this id already exists.`);
         } else if (matrixData.id !== undefined) {
@@ -147,6 +172,17 @@ export class CanvasRenderer {
         matrixData.ctx = this.ctx;
         matrixData.id = id;
         this.matrixItems[id] = matrixData;
+    }
+
+    compare(firstObj, secondObj) {
+        firstObj.startCompare();
+        if (firstObj !== secondObj) {
+            secondObj.startCompare();
+        }
+    }
+
+    get(id) {
+        return this.matrixItems[id];
     }
 
 
