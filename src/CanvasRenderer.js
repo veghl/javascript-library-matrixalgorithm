@@ -99,7 +99,6 @@ export class CanvasRenderer {
                 if (obj instanceof matrixvis.MatrixButton && obj.enabled) {
                     if (obj.isOver(mouseX, mouseY)) {
                         obj.clicked = true;
-                        console.log(obj);
                     }
                 }
             }
@@ -107,7 +106,6 @@ export class CanvasRenderer {
             for (const obj of Object.values(this.matrixItems)) {
                 if (obj instanceof matrixvis.MatrixElement) {
                     if (obj.changeable && obj.isOver(mouseX, mouseY)) {
-                        console.log(obj);
                     }
                 }
 
@@ -115,7 +113,6 @@ export class CanvasRenderer {
                     for (let i = 0; i < obj.elements.length; i++) {
                         for (let j = 0 ; j < obj.elements[i].length; j++){
                             if (obj.elements[i][j].changeable && obj.elements[i][j].isOver(mouseX, mouseY)) {
-                                console.log(obj.elements[i][j]);
                             }
                         }
                     }
@@ -123,7 +120,6 @@ export class CanvasRenderer {
 
                 if (obj instanceof matrixvis.MatrixButton && obj.enabled) {
                     if (obj.isOver(mouseX, mouseY)) {
-                        console.log(obj);
                     }
                 }
             }
@@ -148,6 +144,7 @@ export class CanvasRenderer {
                 if (obj instanceof matrixvis.MatrixElement) {
                     if (obj.changeable && obj.isOver(mouseX, mouseY)) {
                         console.log(obj);
+                        this.makeElementEditable(obj);
                     }
                 }
                 if (obj instanceof matrixvis.Matrix) {
@@ -155,6 +152,7 @@ export class CanvasRenderer {
                         for (let j = 0 ; j < obj.elements[i].length; j++){
                             if (obj.elements[i][j].changeable && obj.elements[i][j].isOver(mouseX, mouseY)) {
                                 console.log(obj.elements[i][j]);
+                                this.makeElementEditable(obj.elements[i][j]);
                             }
                         }
                     }
@@ -184,6 +182,40 @@ export class CanvasRenderer {
     get(id) {
         return this.matrixItems[id];
     }
+    makeElementEditable = (element) => {
+        const input = document.createElement("input");
+        input.type = "number";
+        input.value = element.value;
+        input.style.position = "absolute";
+
+        const rect = this.canvas.getBoundingClientRect();
+        input.style.left = `${rect.left + element.x - element.width / 2}px`;
+        input.style.top = `${rect.top + element.y - element.height}px`;
+
+        input.style.width = `${element.width}px`;
+        input.style.zIndex = 10;
+
+        document.body.appendChild(input);
+        input.focus();
+        input.onblur = () => {
+            this.updateElementValue(element, input);
+        };
+
+        input.onkeydown = (e) => {
+            if (e.key === "Enter") {
+                this.updateElementValue(element, input);
+            }
+        };
+    };
+
+    updateElementValue = (element, input) => {
+        const newValue = parseInt(input.value, 10);
+        if (!isNaN(newValue)) {
+            element.updateValue(newValue);
+            element.setGreenColor(); // Optionally show success color
+        }
+        document.body.removeChild(input); // Clean up
+    };
 
 
 }
