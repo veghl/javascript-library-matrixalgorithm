@@ -25,19 +25,25 @@
         const A = new matrixvis.Matrix("A", [[0,0,0,0],[],[],[]], true);
         A.x = 200;
         A.y = 100;
-        A.setSize(40,40);
+        A.setSize(50,50);
         A.randomize(0,20);
         canvas.add(A, "A");
 
         const B = new matrixvis.Matrix("B", [[0,0,0],[],[]]);
         B.x = 500;
         B.y = 100;
-        //B.setSize(30,30);
         B.randomize(20, 50);
         canvas.add(B, "B");
         canvas.vars.i = 0;
         console.log(canvas.vars);
-        canvas.compare(canvas.get("max"), canvas.get("A").elements[0][0]);
+        canvas.compare(canvas.get("B").elements[0][2], canvas.get("B").elements[0][0]);
+
+        const code = new matrixvis.MatrixCode(["hello  ",
+                                               "szia   "]);
+        code.x = 600;
+        code.y = 100;
+        canvas.add(code, "code");
+        canvas.get("code").selected = [0];
 
     </script>
 </head>

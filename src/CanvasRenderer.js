@@ -216,6 +216,4 @@ export class CanvasRenderer {
         }
         document.body.removeChild(input); // Clean up
     };
-
-
 }
