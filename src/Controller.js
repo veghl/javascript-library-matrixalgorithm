@@ -6,8 +6,13 @@ export class Controller {
         this.x = 0;
         this.y = 0;
         this.ctx = ctx;
+        this.functionIndex = [0];
+        this.stepFunctions = null;
         this.isPlaying = false;
         this.isWaiting = false;
+        this.autoNextStep = -1;
+        this.singleStep = false;
+        this.undo = [];
 
         //Controller labels
         this.resetLabel = "Reset";
@@ -18,16 +23,57 @@ export class Controller {
         this.nextSingleLabel = "►";
         this.nextLabel = "►►";
 
-        this.reset = new matrixvis.MatrixButton(this.resetLabel, 70);
-        this.startStop = new matrixvis.MatrixButton(this.startLabel, 70);
-        this.prevStep = new matrixvis.MatrixButton(this.prevLabel, 70,);
-        this.nextStep = new matrixvis.MatrixButton(this.nextLabel, 70);
-        this.prevSingleStep = new matrixvis.MatrixButton(this.prevSingleLabel, 70);
-        this.nextSingleStep = new matrixvis.MatrixButton(this.nextSingleLabel, 70);
+        this.reset = new matrixvis.MatrixButton(this.resetLabel, 70, this.resetAnimation);
+        this.startStop = new matrixvis.MatrixButton(this.startLabel, 70, this.startStopAnimation);
+        this.prevStep = new matrixvis.MatrixButton(this.prevLabel, 70, this.previousStepFunction);
+        this.nextStep = new matrixvis.MatrixButton(this.nextLabel, 70, this.nextStepFunction);
+        this.prevSingleStep = new matrixvis.MatrixButton(this.prevSingleLabel, 70, this.previousSingleStepFunction);
+        this.nextSingleStep = new matrixvis.MatrixButton(this.nextSingleLabel, 70, this.nextSingleStepFunction);
 
         this.reset.enabled = false;
         this.prevStep.enabled = false;
         this.prevSingleStep.enabled = false;
+    }
+
+    restoreStepfromUndo = () => {}
+
+
+
+    resetAnimation = () => {
+        const stage = this.ctx.canvas.parent;
+        if(stage.animating === 0){
+            this.isplaying = false;
+            this.startStop.text = this.startLabel;
+            this.undo = [];
+        }
+    };
+
+    startStopAnimation = () => {}
+
+    waitAnimationDone = () => {}
+
+    previousStepAnimation = () => {}
+
+    nextStepAnimation = () => {}
+
+    previousStepFunction = () => {
+        this.singleStep = true;
+        this.previousStepAnimation();
+    }
+
+    nextStepFunction = () => {
+        this.singleStep = false;
+        this.nextStepAnimation();
+    }
+
+    previousSingleStepFunction = () => {
+        this.singleStep = true;
+        this.previousStepAnimation();
+    }
+
+    nextSingleStepFunction = () => {
+        this.singleStep = true;
+        this.nextStepAnimation();
     }
 
     render = () => {

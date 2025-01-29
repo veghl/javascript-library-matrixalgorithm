@@ -6,9 +6,10 @@ export class CanvasRenderer {
         this.canvas = document.getElementById(canvasId);
         this.canvas.parent = this;
         this.ctx = this.canvas.getContext('2d');
-        this.fps = 24;
         this.matrixItems = {};
         this.vars = {};
+
+        this.fps = 24;
         setInterval(() => this.render(), 1000 / this.fps);
 
         this.controller = new matrixvis.Controller(this.ctx);
@@ -18,6 +19,11 @@ export class CanvasRenderer {
         this.canvas.addEventListener("mousemove", (e) => this.mouseMoveEvent(e));
         this.canvas.addEventListener("mousedown", (e) => this.mouseDownEvent(e));
         this.canvas.addEventListener("mouseup", (e) => this.mouseUpEvent(e));
+
+        this.showArrow = [];
+        this.showDoubleArrow = [];
+        this.animating = 0;
+        this.time = 1000;
 
         this.render = (e) => {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -120,6 +126,8 @@ export class CanvasRenderer {
 
                 if (obj instanceof matrixvis.MatrixButton && obj.enabled) {
                     if (obj.isOver(mouseX, mouseY)) {
+                        obj.clicked = true;
+                        obj.clickFcn();
                     }
                 }
             }
@@ -137,6 +145,7 @@ export class CanvasRenderer {
                     if (obj.isOver(mouseX, mouseY) && obj.clicked) {
                         console.log(obj);
                         obj.clicked = false;
+                        obj.clickFcn();
                     }
                 }
             }
