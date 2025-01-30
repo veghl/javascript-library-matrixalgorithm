@@ -130,6 +130,10 @@ export class MatrixElement extends MatrixData {
         }
     }
 
+    stopCopy() {
+
+    }
+
     updateValue(value) {
         this.value = value;
     }

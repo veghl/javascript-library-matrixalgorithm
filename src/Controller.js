@@ -40,17 +40,91 @@ export class Controller {
 
 
     resetAnimation = () => {
-        const stage = this.ctx.canvas.parent;
-        if(stage.animating === 0){
+        const mainCanvas = this.ctx.canvas.parent;
+        if(mainCanvas.animating === 0){
             this.isplaying = false;
             this.startStop.text = this.startLabel;
             this.undo = [];
         }
     };
 
-    startStopAnimation = () => {}
+    startStopAnimation = () => {
+        const mainCanvas = this.ctx.canvas.parent;
+        if (mainCanvas.animating === 0 && !this.isWaiting && this.stepFunctions) {
+            if(this.autoNextStep !== 0){
+                this.reset.enabled = true;
+                if(!this.isPlaying){
+                    this.prevStep.enabled = true;
+                    this.prevSingleStep.enabled = true;
+                }
+                const i = this.undo.length;
+                this.undo.push([
+                    JSON.stringify(mainCanvas.vars),
+                    JSON.stringify(mainCanvas.matrixItems),
+                    JSON.stringify(this.functionIndex),
+                    JSON.stringify(mainCanvas.showArrow),
+                    JSON.stringify(mainCanvas.showBendedArrow),
+                    JSON.stringify(mainCanvas.showDoubleArrow),
+                    this.autoNextStep
+                ]);
+            }
+            mainCanvas.showArrow = [];
+            mainCanvas.showBendedArrow = [];
+            mainCanvas.showDoubleArrow = [];
+            mainCanvas.stopComparingAndCopying()
+        }
 
-    waitAnimationDone = () => {}
+        let i = 0;
+        const stepsArray = [this.stepFunctions];
+        const stepsCheck = [null];
+        while (Array.isArray(stepsArray[i][this.functionIndex[i]])) {
+            stepsCheck[i + 1] = stepsArray[i][this.functionIndex[i] + 1];
+            stepsArray[i + 1] = stepsArray[i][this.functionIndex[i]];
+            i++;
+            if (i >= this.functionIndex.length) {
+                this.functionIndex[i] = 0;
+            }
+        }
+
+        this.autoNextStep = stepsArray[i][this.functionIndex[i]]?.() ?? -1;
+
+        let ok;
+        do {
+            ok = true;
+            this.functionIndex[i]++;
+            if (this.functionIndex[i] >= stepsArray[i].length) {
+                if (stepsCheck[i] !== null) {
+                    if (stepsCheck[i]()) {
+                        // repeat some steps
+                        this.functionIndex[i] = 0;
+                    } else {
+                        // no more repeat, step back to previous repeat
+                        i--;
+                        this.functionIndex[i]++; // to skip the check function
+                        this.functionIndex = this.functionIndex.slice(0, i + 1); // remove last item from array
+                        ok = false;
+                    }
+                } else {
+                    // the whole animation ended, no more steps
+                    this.nextStepAuto = -1;
+                    this.playingAnimation = false;
+                    if (this.undo.length > 0) {
+                        this.prevSingleStep.enabled = true;
+                        this.prevStep.enabled = true;
+                    }
+                    this.nextSingleStep.enabled = false;
+                    this.nextStep.enabled = false;
+                    this.startStop.enabled = false;
+                    this.startStop.text = this.startLabel;
+                }
+            }
+        } while (!ok);
+
+    }
+
+    waitAnimationDone = () => {
+        const mainCanvas = this.ctx.canvas.parent;
+    }
 
     previousStepAnimation = () => {}
 
@@ -74,6 +148,10 @@ export class Controller {
     nextSingleStepFunction = () => {
         this.singleStep = true;
         this.nextStepAnimation();
+    }
+
+    setSteps = (stepFunctions) => {
+        this.stepFunctions = stepFunctions;
     }
 
     render = () => {

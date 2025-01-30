@@ -21,6 +21,7 @@ export class CanvasRenderer {
         this.canvas.addEventListener("mouseup", (e) => this.mouseUpEvent(e));
 
         this.showArrow = [];
+        this.showBendedArrow = [];
         this.showDoubleArrow = [];
         this.animating = 0;
         this.time = 1000;
@@ -170,6 +171,10 @@ export class CanvasRenderer {
         }
     }
 
+    setSteps = (stepFunctions) => {
+        this.controller.setSteps(stepFunctions);
+    }
+
     add(matrixData, id) {
         if (this.matrixItems[id] !== undefined) {
             throw new Error(`Cannot add matrixItem ${id}, object with this id already exists.`);
@@ -225,4 +230,30 @@ export class CanvasRenderer {
         }
         document.body.removeChild(input); // Clean up
     };
+
+    stopComparingAndCopying = () => {
+        for (const element of Object.values(this.matrixItems)) {
+            if (element instanceof matrixvis.MatrixElement) {
+                if(element.comparing) {
+                    element.stopCompare();
+                }
+                if(element.copying){
+                    element.stopCopy();
+                }
+            }
+
+            if (element instanceof matrixvis.Matrix) {
+                for (let i = 0; i < element.elements.length; i++) {
+                    for (let j = 0; j < element.elements[i].length; j++) {
+                        if(element.elements[i][j].comparing) {
+                            element.elements[i][j].stopCompare();
+                        }
+                        if(element.elements[i][j].copying) {
+                            element.elements[i][j].stopCopy();
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
