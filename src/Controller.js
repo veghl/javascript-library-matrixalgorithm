@@ -43,10 +43,18 @@ export class Controller {
 
     resetAnimation = () => {
         const mainCanvas = this.ctx.canvas.parent;
-        if(mainCanvas.animating === 0){
-            this.isplaying = false;
+        if(mainCanvas.animating === 0 && !this.isWaiting) {
+            this.isPlaying = false;
+            this.autoNextStep = -1;
             this.startStop.text = this.startLabel;
+            //reset the animation using undo function here
             this.undo = [];
+            this.reset.enabled = false;
+            this.startStop.enabled = true;
+            this.prevSingleStep.enabled = false;
+            this.prevStep.enabled = false;
+            this.nextSingleStep.enabled = true;
+            this.nextStep.enabled = true;
         }
     };
 
