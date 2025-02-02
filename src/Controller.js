@@ -33,6 +33,8 @@ export class Controller {
         this.reset.enabled = false;
         this.prevStep.enabled = false;
         this.prevSingleStep.enabled = false;
+
+        this.animationStepCheckID = null;
     }
 
     restoreStepfromUndo = () => {}
@@ -49,6 +51,58 @@ export class Controller {
     };
 
     startStopAnimation = () => {
+        const mainCanvas = this.ctx.canvas.parent;
+        this.singleStep = false;
+        if (!this.isPlaying) {
+            this.isPlaying = true;
+            this.startStop.text = this.stopLabel;
+            this.prevSingleStep.enabled = false;
+            this.nextSingleStep.enabled = false;
+            this.prevStep.enabled = false;
+            this.nextStep.enabled = false;
+            if(mainCanvas.animating === 0){
+                this.nextStepAnimation();
+            }
+        } else {
+            this.isPlaying = false;
+            this.startStop.text = this.startLabel;
+            if (this.undo.length > 0) {
+                this.prevSingleStep.enabled = true;
+                this.prevStep.enabled = true;
+            }
+            this.nextSingleStep.enabled = true;
+            this.nextStep.enabled = true;
+        }
+    }
+
+    previousStepAnimation = () => {}
+
+    animationWaitDone = () => {
+        this.isWaiting = false;
+        if(this.isPlaying || this.autoNextStep > 0) {
+            this.nextStepAnimation();
+        }
+    }
+
+
+    checkIfAnimationStepDone = () => {
+        const mainCanvas = this.ctx.canvas.parent;
+        if(mainCanvas.animating === 0 && !this.isWaiting){
+            clearInterval(this.animationStepCheckID);
+            if(this.autoNextStep === 0) {
+                this.nextStepAnimation();
+            } else if (this.autoNextStep > 0 && !this.singleStep) {
+                this.isWaiting = true;
+                setTimeout(this.animationWaitDone, (mainCanvas.time / 1000) * this.autoNextStep);
+            } else if (this.isPlaying) {
+                this.isWaiting = true;
+                setTimeout(this.animationWaitDone, mainCanvas.time);
+            }
+        }
+
+    }
+
+    nextStepAnimation = () => {
         const mainCanvas = this.ctx.canvas.parent;
         if (mainCanvas.animating === 0 && !this.isWaiting && this.stepFunctions) {
             if(this.autoNextStep !== 0){
@@ -105,9 +159,8 @@ export class Controller {
                         ok = false;
                     }
                 } else {
-                    // the whole animation ended, no more steps
-                    this.nextStepAuto = -1;
-                    this.playingAnimation = false;
+                    this.autoNextStep = -1;
+                    this.isPlaying = false;
                     if (this.undo.length > 0) {
                         this.prevSingleStep.enabled = true;
                         this.prevStep.enabled = true;
@@ -119,16 +172,8 @@ export class Controller {
                 }
             }
         } while (!ok);
-
+        this.animationStepCheckID = setInterval(this.checkIfAnimationStepDone, 1);
     }
-
-    waitAnimationDone = () => {
-        const mainCanvas = this.ctx.canvas.parent;
-    }
-
-    previousStepAnimation = () => {}
-
-    nextStepAnimation = () => {}
 
     previousStepFunction = () => {
         this.singleStep = true;
