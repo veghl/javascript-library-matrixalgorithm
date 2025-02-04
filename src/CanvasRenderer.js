@@ -144,7 +144,6 @@ export class CanvasRenderer {
             for (const obj of Object.values(this.controller)) {
                 if (obj instanceof matrixvis.MatrixButton && obj.enabled) {
                     if (obj.isOver(mouseX, mouseY) && obj.clicked) {
-                        console.log(obj);
                         obj.clicked = false;
                         obj.clickFcn();
                     }
@@ -153,7 +152,6 @@ export class CanvasRenderer {
             for (const obj of Object.values(this.matrixItems)) {
                 if (obj instanceof matrixvis.MatrixElement) {
                     if (obj.changeable && obj.isOver(mouseX, mouseY)) {
-                        console.log(obj);
                         this.makeElementEditable(obj);
                     }
                 }

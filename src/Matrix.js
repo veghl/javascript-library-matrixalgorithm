@@ -16,7 +16,6 @@ export class Matrix extends MatrixData {
         this.showIndexes = true;
 
         this.elements = this.createMatrix(values);
-        console.log(this.elements);
     }
 
     render() {

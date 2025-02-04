@@ -6,13 +6,17 @@ export class Controller {
         this.x = 0;
         this.y = 0;
         this.ctx = ctx;
+
         this.functionIndex = [0];
         this.stepFunctions = null;
         this.isPlaying = false;
         this.isWaiting = false;
-        this.autoNextStep = -1;
         this.singleStep = false;
+
+        this.autoNextStep = -1;
         this.undo = [];
+        this.animationStepCheckID = null;
+        this.resetIfPossible = false;
 
         //Controller labels
         this.resetLabel = "Reset";
@@ -23,27 +27,30 @@ export class Controller {
         this.nextSingleLabel = "►";
         this.nextLabel = "►►";
 
-        this.reset = new matrixvis.MatrixButton(this.resetLabel, 70, this.resetAnimation);
-        this.startStop = new matrixvis.MatrixButton(this.startLabel, 70, this.startStopAnimation);
-        this.prevStep = new matrixvis.MatrixButton(this.prevLabel, 70, this.previousStepFunction);
-        this.nextStep = new matrixvis.MatrixButton(this.nextLabel, 70, this.nextStepFunction);
-        this.prevSingleStep = new matrixvis.MatrixButton(this.prevSingleLabel, 70, this.previousSingleStepFunction);
-        this.nextSingleStep = new matrixvis.MatrixButton(this.nextSingleLabel, 70, this.nextSingleStepFunction);
+        this.reset = new matrixvis.MatrixButton(this.resetLabel, 80, this.resetAnimation);
+        this.startStop = new matrixvis.MatrixButton(this.startLabel, 80, this.startStopAnimation);
+        this.prevStep = new matrixvis.MatrixButton(this.prevLabel, 80, this.previousStepFunction);
+        this.nextStep = new matrixvis.MatrixButton(this.nextLabel, 80, this.nextStepFunction);
+        this.prevSingleStep = new matrixvis.MatrixButton(this.prevSingleLabel, 80, this.previousSingleStepFunction);
+        this.nextSingleStep = new matrixvis.MatrixButton(this.nextSingleLabel, 80, this.nextSingleStepFunction);
 
         this.reset.enabled = false;
         this.prevStep.enabled = false;
         this.prevSingleStep.enabled = false;
 
-        this.animationStepCheckID = null;
     }
 
-    restoreStepfromUndo = () => {}
+    restoreStepfromUndo = () => {
+        const mainCanvas = this.ctx.canvas.parent;
+
+    }
 
 
 
     resetAnimation = () => {
         const mainCanvas = this.ctx.canvas.parent;
         if(mainCanvas.animating === 0 && !this.isWaiting) {
+            this.resetIfPossible = false;
             this.isPlaying = false;
             this.autoNextStep = -1;
             this.startStop.text = this.startLabel;
@@ -55,6 +62,8 @@ export class Controller {
             this.prevStep.enabled = false;
             this.nextSingleStep.enabled = true;
             this.nextStep.enabled = true;
+        } else if(mainCanvas.animating > 0 || this.isWaiting) {
+            this.resetIfPossible = true;
         }
     };
 
@@ -87,7 +96,9 @@ export class Controller {
 
     animationWaitDone = () => {
         this.isWaiting = false;
-        if(this.isPlaying || this.autoNextStep > 0) {
+        if (this.resetIfPossible) {
+            this.resetAnimation();
+        } else if(this.isPlaying || this.autoNextStep > 0) {
             this.nextStepAnimation();
         }
     }
@@ -112,7 +123,7 @@ export class Controller {
 
     nextStepAnimation = () => {
         const mainCanvas = this.ctx.canvas.parent;
-        if (mainCanvas.animating === 0 && !this.isWaiting && this.stepFunctions) {
+        if (mainCanvas.animating === 0 && !this.isWaiting && !this.stepFunctions != null) {
             if(this.autoNextStep !== 0){
                 this.reset.enabled = true;
                 if(!this.isPlaying){
@@ -129,6 +140,7 @@ export class Controller {
                     JSON.stringify(mainCanvas.showDoubleArrow),
                     this.autoNextStep
                 ]);
+                console.log(this.undo)
             }
             mainCanvas.showArrow = [];
             mainCanvas.showBendedArrow = [];
@@ -149,7 +161,6 @@ export class Controller {
         }
 
         this.autoNextStep = stepsArray[i][this.functionIndex[i]]?.() ?? -1;
-
         let ok;
         do {
             ok = true;
@@ -208,6 +219,7 @@ export class Controller {
     }
 
     render = () => {
+        const canvasWidth = this.ctx.canvas.clientWidth;// Get the canvas width
         //line above buttons
         this.ctx.beginPath();
         this.ctx.strokeStyle = "#000";
@@ -216,23 +228,24 @@ export class Controller {
         this.ctx.stroke();
 
         // Draw the buttons
-        let spaceWidth = 0;
         const buttons = [
-            this.reset,
             this.startStop,
+            this.reset,
             this.prevStep,
             this.prevSingleStep,
             this.nextSingleStep,
             this.nextStep
         ];
 
+        let totalButtonWidth = buttons.reduce((sum, button) => sum + button.width + 10, -10); // Sum button widths with spacing
+        let currentX = (canvasWidth - totalButtonWidth) / 2;
         buttons.forEach(button => {
             if (button.width > 0) {
                 button.ctx = this.ctx;
-                button.x = this.x + button.width / 2 + spaceWidth;
+                button.x = currentX + button.width / 2; // Center each button
                 button.y = this.y;
                 button.render();
-                spaceWidth += button.width + 10; //space between buttons
+                currentX += button.width + 10; // Move to next button position
             }
         });
     }

@@ -150,7 +150,7 @@ export class MatrixElement extends MatrixData {
     // setting color to green, when something is done
     setGreenColor() {
         this.fillColor = this.greenColor;
-        this.strokeColor = '#FFF';
+        this.strokeColor = '#000';
     }
     // setting color to lightblue when comparing
     setCompareColor() {

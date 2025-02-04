@@ -7,7 +7,7 @@ export class MatrixButton extends MatrixData{
         this.y = 0;
         this.text = text;
         this.width = width;
-        this.height = 26;
+        this.height = 28;
         this.enabled = true;
         this.clicked = false;
         this.clickFcn = clickFcn;
