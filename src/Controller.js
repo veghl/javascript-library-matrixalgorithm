@@ -40,9 +40,54 @@ export class Controller {
 
     }
 
-    restoreStepfromUndo = () => {
+    restoreStepfromUndo = (stepNumber) => {
         const mainCanvas = this.ctx.canvas.parent;
+        console.log(mainCanvas.matrixItems);
+        const updateAttributes = (source, target) => {
+            Object.entries(source).forEach(([key, value]) => {
+                if (typeof value === 'object' && value !== null) {
+                    if (target.hasOwnProperty(key)) {
+                        if (Array.isArray(value)) {
+                            value.forEach((item, index) => {
+                                if (target[key][index]) {
+                                    updateAttributes(item, target[key][index]);
+                                }
+                            });
+                        } else {
+                            updateAttributes(value, target[key]);
+                        }
+                    }
+                } else {
+                    if (target.hasOwnProperty(key)) {
+                        target[key] = value;
+                    }
+                }
+            });
+        };
 
+        const cleanProperties = (source, target) => {
+            Object.keys(target).forEach((key) => {
+                if (typeof target[key] === 'object' && target[key] !== null) {
+                    if (source.hasOwnProperty(key)) {
+                        cleanProperties(source[key], target[key]); // Recursively clean objects
+                    } else {
+                        delete target[key]; // Remove attributes that don't exist in source
+                    }
+                } else if (!source.hasOwnProperty(key)) {
+                    delete target[key]; // Remove non-existing attributes
+                }
+            });
+        };
+
+        const vars = JSON.parse(this.undo[stepNumber][0]);
+        updateAttributes(vars, mainCanvas.vars);
+        cleanProperties(vars, mainCanvas.vars);
+        const matrixItems= JSON.parse(this.undo[stepNumber][1]);
+        console.log(matrixItems);
+        updateAttributes(matrixItems, mainCanvas.matrixItems);
+        console.log(mainCanvas.matrixItems);
+        this.functionIndex = JSON.parse(this.undo[stepNumber][2]);
+        this.autoNextStep = this.undo[stepNumber][6];
     }
 
 
@@ -54,7 +99,7 @@ export class Controller {
             this.isPlaying = false;
             this.autoNextStep = -1;
             this.startStop.text = this.startLabel;
-            //reset the animation using undo function here
+            this.restoreStepfromUndo(0);
             this.undo = [];
             this.reset.enabled = false;
             this.startStop.enabled = true;
@@ -161,36 +206,29 @@ export class Controller {
         }
 
         this.autoNextStep = stepsArray[i][this.functionIndex[i]]?.() ?? -1;
-        let ok;
-        do {
-            ok = true;
+        while (true) {
             this.functionIndex[i]++;
             if (this.functionIndex[i] >= stepsArray[i].length) {
-                if (stepsCheck[i] !== null) {
-                    if (stepsCheck[i]()) {
-                        // repeat some steps
-                        this.functionIndex[i] = 0;
-                    } else {
-                        // no more repeat, step back to previous repeat
-                        i--;
-                        this.functionIndex[i]++; // to skip the check function
-                        this.functionIndex = this.functionIndex.slice(0, i + 1); // remove last item from array
-                        ok = false;
+                if (!stepsCheck[i] || !stepsCheck[i]()) {
+                    if (--i < 0) {
+                        this.autoNextStep = -1;
+                        this.isPlaying = false;
+                        this.prevSingleStep.enabled = this.undo.length > 0;
+                        this.prevStep.enabled = this.undo.length > 0;
+                        this.nextSingleStep.enabled = false;
+                        this.nextStep.enabled = false;
+                        this.startStop.enabled = false;
+                        this.startStop.text = this.startLabel;
+                        break;
                     }
+                    this.functionIndex[i]++;
+                    this.functionIndex = this.functionIndex.slice(0, i + 1);
                 } else {
-                    this.autoNextStep = -1;
-                    this.isPlaying = false;
-                    if (this.undo.length > 0) {
-                        this.prevSingleStep.enabled = true;
-                        this.prevStep.enabled = true;
-                    }
-                    this.nextSingleStep.enabled = false;
-                    this.nextStep.enabled = false;
-                    this.startStop.enabled = false;
-                    this.startStop.text = this.startLabel;
+                    this.functionIndex[i] = 0;
                 }
-            }
-        } while (!ok);
+            } else break;
+        }
+
         this.animationStepCheckID = setInterval(this.checkIfAnimationStepDone, 1);
     }
 

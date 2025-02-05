@@ -6,7 +6,7 @@
 
 
     <script type="module">
-        import { matrixvis } from './src/index.js';
+        import {matrixvis} from './src/index.js';
 
         const canvas = new matrixvis.CanvasRenderer("myCanvas");
         const max = new matrixvis.MatrixElement("max", 999, true, true);
@@ -34,15 +34,20 @@
         B.y = 100;
         B.randomize(20, 50);
         canvas.add(B, "B");
+        canvas.vars.i=0;
 
         const firstStep = () => {
             console.log("first");
             canvas.get("A").elements[0][0].changeable = false;
+            canvas.get("max").changeable = false;
+            canvas.vars.i = 2;
         }
 
         const secondStep = () => {
             console.log("comparing");
             canvas.compare(canvas.get("A").elements[0][2], canvas.get("A").elements[1][3]);
+            canvas.vars.i = 1;
+            canvas.compare(canvas.get("max"))
         }
 
         canvas.setSteps(
