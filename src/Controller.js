@@ -42,7 +42,6 @@ export class Controller {
 
     restoreStepfromUndo = (stepNumber) => {
         const mainCanvas = this.ctx.canvas.parent;
-        console.log(mainCanvas.matrixItems);
         const updateAttributes = (source, target) => {
             Object.entries(source).forEach(([key, value]) => {
                 if (typeof value === 'object' && value !== null) {
@@ -83,9 +82,7 @@ export class Controller {
         updateAttributes(vars, mainCanvas.vars);
         cleanProperties(vars, mainCanvas.vars);
         const matrixItems= JSON.parse(this.undo[stepNumber][1]);
-        console.log(matrixItems);
         updateAttributes(matrixItems, mainCanvas.matrixItems);
-        console.log(mainCanvas.matrixItems);
         this.functionIndex = JSON.parse(this.undo[stepNumber][2]);
         this.autoNextStep = this.undo[stepNumber][6];
     }
@@ -137,7 +134,27 @@ export class Controller {
         }
     }
 
-    previousStepAnimation = () => {}
+    previousStepAnimation = () => {
+        const mainCanvas = this.ctx.canvas.parent;
+        if (mainCanvas.animating === 0 && !this.isWaiting) {
+            let i = this.undo.length - 1;
+            if (!this.singleStep) {
+                while (this.undo[i][6] > 0){
+                    i--;
+                }
+            }
+            this.restoreStepfromUndo(i);
+            this.undo = this.undo.slice(0,i);
+            if (this.undo.length === 0){
+                this.prevStep.enabled = false;
+                this.prevSingleStep.enabled = false;
+                this.reset.enabled = false;
+            }
+            this.startStop.enabled = true;
+            this.nextSingleStep.enabled = true;
+            this.nextStep.enabled = true;
+        }
+    }
 
     animationWaitDone = () => {
         this.isWaiting = false;
@@ -233,7 +250,7 @@ export class Controller {
     }
 
     previousStepFunction = () => {
-        this.singleStep = true;
+        this.singleStep = false;
         this.previousStepAnimation();
     }
 

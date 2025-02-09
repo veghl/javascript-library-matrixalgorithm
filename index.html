@@ -9,13 +9,13 @@
         import {matrixvis} from './src/index.js';
 
         const canvas = new matrixvis.CanvasRenderer("myCanvas");
-        const max = new matrixvis.MatrixElement("max", 999, true, true);
+        const max = new matrixvis.MatrixElement("max", 5, true, true);
         max.x = 75;
         max.y = 100;
         max.setSize(40,40);
         canvas.add(max, "max");
 
-        const min = new matrixvis.MatrixElement("min", 5, false, true);
+        const min = new matrixvis.MatrixElement("min", 0, false, true);
         min.x = 75;
         min.y = 175;
         min.setSize(50,50)
@@ -45,14 +45,21 @@
 
         const secondStep = () => {
             console.log("comparing");
-            canvas.compare(canvas.get("A").elements[0][2], canvas.get("A").elements[1][3]);
             canvas.vars.i = 1;
-            canvas.compare(canvas.get("max"))
+            canvas.compare(canvas.get("max"), canvas.get("A").elements[0][0])
+        }
+
+        const thirdStep = () => {
+            console.log("final step");
+            if (canvas.get("max").value < canvas.get("A").elements[0][0].value){
+                canvas.get("max").updateValue(canvas.get("A").elements[0][0].value);
+            }
+            canvas.stopComparingAndCopying();
+            canvas.get("A").elements[0][0].setGreenColor();
         }
 
         canvas.setSteps(
-            [firstStep, secondStep
-            ]
+            [firstStep, secondStep, thirdStep]
         )
 
 

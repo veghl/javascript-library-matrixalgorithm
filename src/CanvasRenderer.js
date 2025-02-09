@@ -224,9 +224,9 @@ export class CanvasRenderer {
         const newValue = parseInt(input.value, 10);
         if (!isNaN(newValue)) {
             element.updateValue(newValue);
-            element.setGreenColor(); // Optionally show success color
+            element.setUpdateColor();
         }
-        document.body.removeChild(input); // Clean up
+        document.body.removeChild(input);
     };
 
     stopComparingAndCopying = () => {

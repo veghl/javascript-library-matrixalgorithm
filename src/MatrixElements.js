@@ -33,9 +33,12 @@ export class MatrixElement extends MatrixData {
         this.orangeColor = '#F9B900';
         this.grayColor = '#999999';
         this.blackColor = '#000';
+        this.updateColor = "#9FD7B6";
 
         this.originalFillColor = "#EEE";
         this.originalStrokeColor = "#000";
+
+        this.persistentColor = 0;
     }
 
     render() {
@@ -140,17 +143,22 @@ export class MatrixElement extends MatrixData {
 
     // setting colors of MatrixElement
     setDefaultColor() {
-        this.fillColor = this.defaultColor;
-        this.strokeColor = this.blackColor;
+        if(!this.persistentColor){
+            this.fillColor = this.defaultColor;
+            this.strokeColor = this.blackColor;
+        }
     }
     // setting color when object is changeable and mouse is over
     setDefaultOverColor() {
-        this.fillColor = "#CCC"
+        if(!this.persistentColor){
+            this.fillColor = "#CCC"
+        }
     }
     // setting color to green, when something is done
     setGreenColor() {
         this.fillColor = this.greenColor;
         this.strokeColor = '#000';
+        this.persistentColor = this.greenColor;
     }
     // setting color to lightblue when comparing
     setCompareColor() {
@@ -161,5 +169,10 @@ export class MatrixElement extends MatrixData {
     setGrayColor() {
         this.fillColor = this.grayColor;
         this.strokeColor = this.blackColor;
+    }
+
+    setUpdateColor() {
+        this.fillColor = this.updateColor;
+        this.strokeColor = '#000';
     }
 }
