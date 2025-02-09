@@ -38,7 +38,7 @@ export class MatrixElement extends MatrixData {
         this.originalFillColor = "#EEE";
         this.originalStrokeColor = "#000";
 
-        this.persistentColor = 0;
+        this.persistentColor = null;
     }
 
     render() {

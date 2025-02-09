@@ -15,12 +15,11 @@
         max.setSize(40,40);
         canvas.add(max, "max");
 
-        const min = new matrixvis.MatrixElement("min", 0, false, true);
-        min.x = 75;
-        min.y = 175;
-        min.setSize(50,50)
-        min.randomize(0, 3);
-        canvas.add(min, "min");
+        const sum = new matrixvis.MatrixElement("sum", 0, false, true);
+        sum.x = 75;
+        sum.y = 175;
+        sum.setSize(50,50)
+        canvas.add(sum, "sum");
 
         const A = new matrixvis.Matrix("A", [[0,0,0,0],[],[],[]], true);
         A.x = 200;
@@ -29,37 +28,52 @@
         A.randomize(0,20);
         canvas.add(A, "A");
 
-        const B = new matrixvis.Matrix("B", [[0,0,0],[],[]]);
-        B.x = 500;
-        B.y = 100;
-        B.randomize(20, 50);
-        canvas.add(B, "B");
-        canvas.vars.i=0;
+        const code = new matrixvis.MatrixCode(["IF (MAX < A[0][0]) {",
+                                                "       MAX = A[0][0] }"])
+        code.x = 400;
+        code.y = 150;
+        canvas.add(code, "code");
 
-        const firstStep = () => {
-            console.log("first");
-            canvas.get("A").elements[0][0].changeable = false;
-            canvas.get("max").changeable = false;
-            canvas.vars.i = 2;
+        canvas.vars.index=0;
+
+        const step1 = () => {
+            canvas.get("code").selected = [0];
+            return 200;
         }
 
-        const secondStep = () => {
-            console.log("comparing");
-            canvas.vars.i = 1;
-            canvas.compare(canvas.get("max"), canvas.get("A").elements[0][0])
+        const step2 = () => {
+            canvas.get("code").selected = [1];
+            return 200;
         }
 
-        const thirdStep = () => {
-            console.log("final step");
-            if (canvas.get("max").value < canvas.get("A").elements[0][0].value){
-                canvas.get("max").updateValue(canvas.get("A").elements[0][0].value);
+        const sumAdd = () => {
+            let valueToAdd = canvas.get("A").elements[0][canvas.vars.index].value;
+            console.log(`Adding value: ${valueToAdd} from A[0][${canvas.vars.index}]`);
+            canvas.get("sum").value += valueToAdd;
+            return 200;
+        };
+
+        const sumIncrease = () => {
+            canvas.vars.index++;
+            if (sumCheck()) {
+                return 200;
+            } else {
+                return 0;
             }
-            canvas.stopComparingAndCopying();
-            canvas.get("A").elements[0][0].setGreenColor();
+        };
+
+        const sumCheck = () => {
+            console.log(canvas.vars.index);
+            console.log(canvas.get("A").elements.length);
+            return canvas.vars.index < canvas.get("A").elements[0].length;
+        }
+
+        const sumFinal = () => {
+            canvas.get("code").selected = [];
         }
 
         canvas.setSteps(
-            [firstStep, secondStep, thirdStep]
+            [step1, step2,[sumAdd, sumIncrease], sumCheck,sumFinal]
         )
 
 

@@ -14,7 +14,6 @@ export class MatrixCode extends MatrixData {
 
         this.ctx.fillStyle = this.selectionColor;
         this.selected.forEach(selectedIndex => {this.ctx.fillRect(this.x, this.y + selectedIndex * 22, maxWidth + 20, 20 );})
-
         this.ctx.fillStyle = "#000";
         this.ctx.textAlign = "left";
         this.ctx.textBaseline = "top";

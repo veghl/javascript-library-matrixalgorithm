@@ -44,22 +44,17 @@ export class Controller {
         const mainCanvas = this.ctx.canvas.parent;
         const updateAttributes = (source, target) => {
             Object.entries(source).forEach(([key, value]) => {
-                if (typeof value === 'object' && value !== null) {
-                    if (target.hasOwnProperty(key)) {
-                        if (Array.isArray(value)) {
-                            value.forEach((item, index) => {
-                                if (target[key][index]) {
-                                    updateAttributes(item, target[key][index]);
-                                }
-                            });
-                        } else {
-                            updateAttributes(value, target[key]);
+                try {
+                    if (typeof value === 'object' && value !== null) {
+                        if (!target.hasOwnProperty(key)) {
+                            target[key] = Array.isArray(value) ? [] : {}; // Ensure missing objects are created
                         }
+                        updateAttributes(value, target[key]);
+                    } else {
+                        target[key] = value; // Try assigning the value
                     }
-                } else {
-                    if (target.hasOwnProperty(key)) {
-                        target[key] = value;
-                    }
+                } catch (err) {
+                    console.warn(`⚠️ Cannot update key: ${key} → Read-Only Error:`, err);
                 }
             });
         };
@@ -82,6 +77,8 @@ export class Controller {
         updateAttributes(vars, mainCanvas.vars);
         cleanProperties(vars, mainCanvas.vars);
         const matrixItems= JSON.parse(this.undo[stepNumber][1]);
+        console.log(matrixItems);
+        console.log(mainCanvas.matrixItems);
         updateAttributes(matrixItems, mainCanvas.matrixItems);
         this.functionIndex = JSON.parse(this.undo[stepNumber][2]);
         this.autoNextStep = this.undo[stepNumber][6];
@@ -170,7 +167,9 @@ export class Controller {
         const mainCanvas = this.ctx.canvas.parent;
         if(mainCanvas.animating === 0 && !this.isWaiting){
             clearInterval(this.animationStepCheckID);
-            if(this.autoNextStep === 0) {
+            if(this.resetIfPossible){
+                this.resetAnimation();
+            } else if(this.autoNextStep === 0) {
                 this.nextStepAnimation();
             } else if (this.autoNextStep > 0 && !this.singleStep) {
                 this.isWaiting = true;
@@ -185,7 +184,7 @@ export class Controller {
 
     nextStepAnimation = () => {
         const mainCanvas = this.ctx.canvas.parent;
-        if (mainCanvas.animating === 0 && !this.isWaiting && !this.stepFunctions != null) {
+        if (mainCanvas.animating === 0 && !this.isWaiting && this.stepFunctions != null) {
             if(this.autoNextStep !== 0){
                 this.reset.enabled = true;
                 if(!this.isPlaying){
@@ -202,7 +201,6 @@ export class Controller {
                     JSON.stringify(mainCanvas.showDoubleArrow),
                     this.autoNextStep
                 ]);
-                console.log(this.undo)
             }
             mainCanvas.showArrow = [];
             mainCanvas.showBendedArrow = [];
@@ -214,6 +212,7 @@ export class Controller {
         const stepsArray = [this.stepFunctions];
         const stepsCheck = [null];
         while (Array.isArray(stepsArray[i][this.functionIndex[i]])) {
+            console.log(stepsArray[i][this.functionIndex[i]])
             stepsCheck[i + 1] = stepsArray[i][this.functionIndex[i] + 1];
             stepsArray[i + 1] = stepsArray[i][this.functionIndex[i]];
             i++;
@@ -223,30 +222,39 @@ export class Controller {
         }
 
         this.autoNextStep = stepsArray[i][this.functionIndex[i]]?.() ?? -1;
-        while (true) {
+        let ok;
+        do {
+            ok = true;
             this.functionIndex[i]++;
-            if (this.functionIndex[i] >= stepsArray[i].length) {
-                if (!stepsCheck[i] || !stepsCheck[i]()) {
-                    if (--i < 0) {
-                        this.autoNextStep = -1;
-                        this.isPlaying = false;
-                        this.prevSingleStep.enabled = this.undo.length > 0;
-                        this.prevStep.enabled = this.undo.length > 0;
-                        this.nextSingleStep.enabled = false;
-                        this.nextStep.enabled = false;
-                        this.startStop.enabled = false;
-                        this.startStop.text = this.startLabel;
-                        break;
-                    }
-                    this.functionIndex[i]++;
-                    this.functionIndex = this.functionIndex.slice(0, i + 1);
-                } else {
-                    this.functionIndex[i] = 0;
-                }
-            } else break;
-        }
 
-        this.animationStepCheckID = setInterval(this.checkIfAnimationStepDone, 1);
+            if (this.functionIndex[i] >= stepsArray[i].length) {
+                if (stepsCheck[i]) {
+                    if (stepsCheck[i]()) {
+                        this.functionIndex[i] = 0;
+                    } else {
+                        i--;
+                        this.functionIndex[i]++;
+                        this.functionIndex = this.functionIndex.slice(0, i + 1);
+                        ok = false;
+                    }
+                } else {
+                    this.autoNextStep = -1;
+                    this.isPlaying = false;
+
+                    if (this.undo.length > 0) {
+                        this.prevSingleStep.enabled = true;
+                        this.prevStep.enabled = true;
+                    }
+
+                    this.nextSingleStep.enabled = false;
+                    this.nextStep.enabled = false;
+                    this.startStop.enabled = false;
+                    this.startStop.text = this.startLabel;
+                }
+            }
+        } while (!ok);
+
+        this.animationStepCheckID = setInterval(this.checkIfAnimationStepDone, 10);
     }
 
     previousStepFunction = () => {
