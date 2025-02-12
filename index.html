@@ -10,10 +10,12 @@
 
         const canvas = new matrixvis.CanvasRenderer("myCanvas");
         const max = new matrixvis.MatrixElement("max", 5, true, true);
-        max.x = 75;
+        max.x = 70;
         max.y = 100;
-        max.setSize(40,40);
+        max.setSize(50,50);
         canvas.add(max, "max");
+
+
 
         const sum = new matrixvis.MatrixElement("sum", 0, false, true);
         sum.x = 75;
@@ -38,6 +40,7 @@
 
         const step1 = () => {
             canvas.get("code").selected = [0];
+            canvas.copy( canvas.get("max"), canvas.get("A").elements[3][2]);
             return 200;
         }
 
@@ -70,6 +73,7 @@
 
         const sumFinal = () => {
             canvas.get("code").selected = [];
+            canvas.copy(canvas.get("sum"), canvas.get("max"));
         }
 
         canvas.setSteps(

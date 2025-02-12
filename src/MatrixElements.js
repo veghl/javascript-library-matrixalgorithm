@@ -44,6 +44,7 @@ export class MatrixElement extends MatrixData {
     render() {
         this.ctx.fillStyle = this.fillColor;
         this.ctx.fillRect(this.x - this.width / 2, this.y - this.height / 2, this.width, this.height);
+        this.ctx.setLineDash([])
         this.ctx.strokeStyle = this.strokeColor;
         this.ctx.strokeRect(this.x - this.width / 2 - 0.5, this.y - this.height / 2 - 0.5, this.width + 1, this.height + 1);
 
@@ -68,6 +69,23 @@ export class MatrixElement extends MatrixData {
             this.ctx.textBaseline = "middle";
             this.ctx.fillText("?", this.x, this.y);
             this.ctx.globalAlpha = 1;
+        }
+    }
+
+    copyRender() {
+        if (this.copying) {
+            this.ctx.fillStyle = this.fillColor;
+            this.ctx.fillRect(this.copyx - this.width  / 2, this.copyy - this.height / 2, this.width, this.height);
+            this.ctx.setLineDash([5]);
+            this.ctx.strokeStyle = this.strokeColor;
+            this.ctx.strokeRect(this.copyx - this.width / 2 - 0.5, this.copyy - this.height / 2 - 0.5, this.width + 1, this.height + 1);
+
+            this.ctx.fillStyle = this.strokeColor;
+            this.ctx.font = "16px Arial";
+            this.ctx.textAlign = "center";
+            this.ctx.textBaseline = "middle";
+
+            this.ctx.fillText(this.value, this.copyx, this.copyy);
         }
     }
 
@@ -116,6 +134,22 @@ export class MatrixElement extends MatrixData {
         );
     }
 
+    startCopy() {
+        this.originalFillColor = this.fillColor;
+        this.originalStrokeColor = this.strokeColor;
+        this.copyx = this.x;
+        this.copyy = this.y;
+        this.copying = true;
+    }
+
+    stopCopy() {
+        if (this.copying) {
+            this.fillColor = this.originalFillColor;
+            this.strokeColor = this.originalStrokeColor;
+            this.copying = false;
+        }
+    }
+
     startCompare() {
         this.originalFillColor = this.fillColor;
         this.originalStrokeColor = this.strokeColor;
@@ -133,9 +167,6 @@ export class MatrixElement extends MatrixData {
         }
     }
 
-    stopCopy() {
-
-    }
 
     updateValue(value) {
         this.value = value;

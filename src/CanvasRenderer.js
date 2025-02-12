@@ -9,7 +9,7 @@ export class CanvasRenderer {
         this.matrixItems = {};
         this.vars = {};
 
-        this.fps = 24;
+        this.fps = 30;
         setInterval(() => this.render(), 1000 / this.fps);
 
         this.controller = new matrixvis.Controller(this.ctx);
@@ -28,14 +28,22 @@ export class CanvasRenderer {
 
         this.render = (e) => {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
             this.controller.render();
+
             for (const matrixItem of Object.values(this.matrixItems)) {
-                if(typeof matrixItem.render === 'function') {
+                if (typeof matrixItem.render === 'function') {
                     matrixItem.render(this.ctx);
                 }
             }
-
-        }
+            for (const matrixItem of Object.values(this.matrixItems)) {
+                if (matrixItem instanceof matrixvis.MatrixElement || matrixItem instanceof matrixvis.Matrix) {
+                    if (typeof matrixItem.copyRender === 'function') {
+                        matrixItem.copyRender();
+                    }
+                }
+            }
+        };
 
     }
 
@@ -62,7 +70,7 @@ export class CanvasRenderer {
                 if (obj.changeable && obj.isOver(mouseX, mouseY)) {
                     mouseCursor = "pointer";
                     obj.setDefaultOverColor();
-                } else if (obj.comparing || obj.copying) {
+                } else if (obj.comparing /*|| obj.copying*/) {
                     obj.setCompareColor();
                 } else {
                     obj.setDefaultColor();
@@ -184,10 +192,52 @@ export class CanvasRenderer {
         this.matrixItems[id] = matrixData;
     }
 
-    compare(firstObj, secondObj) {
-        firstObj.startCompare();
-        if (firstObj !== secondObj) {
-            secondObj.startCompare();
+    copy(obj1, obj2) {
+        this.animating++;
+        obj1.changeable = false;
+        obj2.changeable = false;
+        const fps = this.fps;
+        const distance = Math.hypot(obj1.x - obj2.x, obj1.y - obj2.y);
+        let time = (distance * this.time) /100;
+        if(time > this.time){
+            time = this.time;
+        }
+        let frames = Math.floor(time * fps /1000);
+        console.log(distance);
+        console.log(time);
+        console.log(frames);
+        const dx = (obj2.x - obj1.x) / frames;
+        const dy = (obj2.y - obj1.y) / frames;
+
+        const strokeC = obj1.strokeColor;
+        const fillC = obj1.fillColor;
+        obj1.startCopy();
+        obj1.setCompareColor();
+        const intervalId = setInterval(() => {
+            frames--;
+
+            if (frames > 0) {
+                obj1.copyx += dx;
+                obj1.copyy += dy;
+            } else {
+                obj1.copyx = obj2.x;
+                obj1.copyy = obj2.y;
+                obj2.value = obj1.value;
+                obj2.minValue = obj1.minValue;
+                obj2.maxValue = obj1.maxValue;
+                obj2.strokeColor = strokeC;
+                obj2.fillColor = fillC;
+                clearInterval(intervalId);
+                this.animating--;
+            }
+        }, 1000 / fps);
+
+    }
+
+    compare(obj1, obj2) {
+        obj1.startCompare();
+        if (obj1 !== obj2) {
+            obj2.startCompare();
         }
     }
 

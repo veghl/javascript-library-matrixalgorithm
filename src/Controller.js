@@ -284,6 +284,7 @@ export class Controller {
     render = () => {
         const canvasWidth = this.ctx.canvas.clientWidth;// Get the canvas width
         //line above buttons
+        this.ctx.setLineDash([])
         this.ctx.beginPath();
         this.ctx.strokeStyle = "#000";
         this.ctx.moveTo(0, this.y - 30 + 0.5);
