@@ -206,6 +206,7 @@ export class Controller {
             mainCanvas.showBendedArrow = [];
             mainCanvas.showDoubleArrow = [];
             mainCanvas.stopComparingAndCopying()
+            console.log(this.autoNextStep)
         }
 
         let i = 0;
@@ -263,6 +264,10 @@ export class Controller {
     }
 
     nextStepFunction = () => {
+        const mainCanvas = this.ctx.canvas.parent;
+        if (mainCanvas.animating > 0 || this.isWaiting) {
+            return;
+        }
         this.singleStep = false;
         this.nextStepAnimation();
     }
@@ -273,6 +278,10 @@ export class Controller {
     }
 
     nextSingleStepFunction = () => {
+        const mainCanvas = this.ctx.canvas.parent;
+        if (mainCanvas.animating > 0 || this.isWaiting) {
+            return;
+        }
         this.singleStep = true;
         this.nextStepAnimation();
     }

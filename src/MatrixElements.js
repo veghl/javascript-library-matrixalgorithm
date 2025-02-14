@@ -74,7 +74,7 @@ export class MatrixElement extends MatrixData {
 
     copyRender() {
         if (this.copying) {
-            this.ctx.fillStyle = this.fillColor;
+            this.ctx.fillStyle = this.grayColor;
             this.ctx.fillRect(this.copyx - this.width  / 2, this.copyy - this.height / 2, this.width, this.height);
             this.ctx.setLineDash([5]);
             this.ctx.strokeStyle = this.strokeColor;

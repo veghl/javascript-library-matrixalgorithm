@@ -70,10 +70,14 @@ export class CanvasRenderer {
                 if (obj.changeable && obj.isOver(mouseX, mouseY)) {
                     mouseCursor = "pointer";
                     obj.setDefaultOverColor();
-                } else if (obj.comparing /*|| obj.copying*/) {
-                    obj.setCompareColor();
                 } else {
-                    obj.setDefaultColor();
+                    if (obj.persistentColor) {
+                        obj.fillColor = obj.persistentColor;
+                    } else if (obj.comparing || obj.copying) {
+                        obj.setCompareColor();
+                    } else {
+                        obj.setDefaultColor();
+                    }
                 }
             }
             // check matrix
@@ -203,9 +207,6 @@ export class CanvasRenderer {
             time = this.time;
         }
         let frames = Math.floor(time * fps /1000);
-        console.log(distance);
-        console.log(time);
-        console.log(frames);
         const dx = (obj2.x - obj1.x) / frames;
         const dy = (obj2.y - obj1.y) / frames;
 

@@ -41,17 +41,14 @@
         const step1 = () => {
             canvas.get("code").selected = [0];
             canvas.copy( canvas.get("max"), canvas.get("A").elements[3][2]);
-            return 200;
         }
 
         const step2 = () => {
             canvas.get("code").selected = [1];
-            return 200;
         }
 
         const sumAdd = () => {
             let valueToAdd = canvas.get("A").elements[0][canvas.vars.index].value;
-            console.log(`Adding value: ${valueToAdd} from A[0][${canvas.vars.index}]`);
             canvas.get("sum").value += valueToAdd;
             return 200;
         };
@@ -66,8 +63,6 @@
         };
 
         const sumCheck = () => {
-            console.log(canvas.vars.index);
-            console.log(canvas.get("A").elements.length);
             return canvas.vars.index < canvas.get("A").elements[0].length;
         }
 
@@ -76,8 +71,17 @@
             canvas.copy(canvas.get("sum"), canvas.get("max"));
         }
 
+        const sumFinal2 = () => {
+            canvas.get("max").setGreenColor();
+        }
+
         canvas.setSteps(
-            [step1, step2,[sumAdd, sumIncrease], sumCheck,sumFinal]
+            [step1,
+                step2,
+                [sumAdd, sumIncrease],
+                sumCheck,
+                sumFinal,
+                sumFinal2]
         )
 
 
