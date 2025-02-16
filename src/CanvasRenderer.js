@@ -37,9 +37,17 @@ export class CanvasRenderer {
                 }
             }
             for (const matrixItem of Object.values(this.matrixItems)) {
-                if (matrixItem instanceof matrixvis.MatrixElement || matrixItem instanceof matrixvis.Matrix) {
+                if (matrixItem instanceof matrixvis.MatrixElement ) {
                     if (typeof matrixItem.copyRender === 'function') {
                         matrixItem.copyRender();
+                    }
+                } else if (matrixItem instanceof matrixvis.Matrix) {
+                    for (let i = 0; i < matrixItem.elements.length; i++) {
+                        for (let j = 0 ; j < matrixItem.elements[i].length; j++){
+                            if(typeof matrixItem.elements[i][j].copyRender === 'function') {
+                                matrixItem.elements[i][j].copyRender();
+                            }
+                        }
                     }
                 }
             }
@@ -73,8 +81,10 @@ export class CanvasRenderer {
                 } else {
                     if (obj.persistentColor) {
                         obj.fillColor = obj.persistentColor;
-                    } else if (obj.comparing || obj.copying) {
+                    } else if (obj.comparing) {
                         obj.setCompareColor();
+                    } else if (obj.copying) {
+                        obj.setCopyColor();
                     } else {
                         obj.setDefaultColor();
                     }
@@ -87,10 +97,16 @@ export class CanvasRenderer {
                         if (obj.elements[i][j].changeable && obj.elements[i][j].isOver(mouseX, mouseY)) {
                             obj.elements[i][j].setDefaultOverColor();
                             mouseCursor = "pointer";
-                        }else if (obj.elements[i][j].comparing || obj.elements[i][j].copying) {
-                            obj.elements[i][j].setCompareColor();
                         } else {
-                            obj.elements[i][j].setDefaultColor();
+                            if (obj.elements[i][j].persistentColor) {
+                                obj.fillColor = obj.elements[i][j].persistentColor;
+                            }else if (obj.elements[i][j].comparing) {
+                                obj.elements[i][j].setCompareColor();
+                            }else if (obj.elements[i][j].copying) {
+                                obj.elements[i][j].setCopyColor();
+                            }else {
+                                obj.elements[i][j].setDefaultColor();
+                            }
                         }
                     }
                 }
@@ -213,7 +229,7 @@ export class CanvasRenderer {
         const strokeC = obj1.strokeColor;
         const fillC = obj1.fillColor;
         obj1.startCopy();
-        obj1.setCompareColor();
+        obj1.setCopyColor();
         const intervalId = setInterval(() => {
             frames--;
 
@@ -224,6 +240,7 @@ export class CanvasRenderer {
                 obj1.copyx = obj2.x;
                 obj1.copyy = obj2.y;
                 obj2.value = obj1.value;
+                obj2.sumvalue = obj2.value;
                 obj2.minValue = obj1.minValue;
                 obj2.maxValue = obj1.maxValue;
                 obj2.strokeColor = strokeC;
@@ -232,7 +249,67 @@ export class CanvasRenderer {
                 this.animating--;
             }
         }, 1000 / fps);
+    }
 
+    sum(obj1, obj2) {
+        this.animating++;
+        obj1.changeable = false;
+        obj2.changeable = false;
+
+        const fps = this.fps;
+        const midX = obj2.x + obj2.width + 10;
+        const midY = obj2.y;
+        const distance1 = Math.hypot(midX - obj1.x, midY - obj1.y);
+        const distance2 = Math.hypot(obj2.x - midX, obj2.y - midY);
+
+        let time1 = (distance1 * this.time) / 100;
+        let time2 = (distance2 * this.time) / 100;
+        if (time1 > this.time) time1 = this.time;
+        if (time2 > this.time) time2 = this.time;
+
+        let frames1 = Math.floor(time1 * fps / 1000);
+        let frames2 = Math.floor(time2 * fps / 1000);
+
+        const dx1 = (midX - obj1.x) / frames1;
+        const dy1 = (midY - obj1.y) / frames1;
+        const dx2 = (obj2.x - midX) / frames2;
+        const dy2 = (obj2.y - midY) / frames2;
+        const strokeC = obj1.strokeColor;
+        const fillC = obj1.fillColor;
+
+        obj1.summing = true;
+        obj1.startCopy();
+        obj1.setCopyColor();
+
+        let phase = 1;
+        const intervalId = setInterval(() => {
+            if (phase === 1) {
+                if (frames1 > 0) {
+                    obj1.copyx += dx1;
+                    obj1.copyy += dy1;
+                    frames1--;
+                } else {
+                    phase = 2;
+                }
+            } else if (phase === 2) {
+                if (frames2 > 0) {
+                    obj1.copyx += dx2;
+                    obj1.copyy += dy2;
+                    frames2--;
+                    obj1.summing = false;
+                } else {
+                    obj1.copyx = obj2.x;
+                    obj1.copyy = obj2.y;
+                    obj2.value += obj1.value;
+                    obj2.sumvalue = obj2.value;
+                    obj1.sumvalue = obj2.value;
+                    obj2.strokeColor = strokeC;
+                    obj2.fillColor = fillC;
+                    clearInterval(intervalId);
+                    this.animating--;
+                }
+            }
+        }, 1000 / fps);
     }
 
     compare(obj1, obj2) {

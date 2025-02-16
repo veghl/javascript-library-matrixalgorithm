@@ -16,7 +16,8 @@ export class MatrixElement extends MatrixData {
 
         this.changeable = changeable;
         this.showLabel = showLabel;
-        this.changing = false;
+        this.summing = false;
+        this.sumvalue = value;
         this.copying = false;
         this.copyx = 0;
         this.copyy = 0;
@@ -31,6 +32,7 @@ export class MatrixElement extends MatrixData {
         this.defaultColor = '#EEE';
         this.greenColor = '#579F6E';
         this.orangeColor = '#F9B900';
+        this.lightOrangeColor = '#FFDA99';
         this.grayColor = '#999999';
         this.blackColor = '#000';
         this.updateColor = "#9FD7B6";
@@ -74,7 +76,7 @@ export class MatrixElement extends MatrixData {
 
     copyRender() {
         if (this.copying) {
-            this.ctx.fillStyle = this.grayColor;
+            this.ctx.fillStyle = this.orangeColor;
             this.ctx.fillRect(this.copyx - this.width  / 2, this.copyy - this.height / 2, this.width, this.height);
             this.ctx.setLineDash([5]);
             this.ctx.strokeStyle = this.strokeColor;
@@ -84,8 +86,12 @@ export class MatrixElement extends MatrixData {
             this.ctx.font = "16px Arial";
             this.ctx.textAlign = "center";
             this.ctx.textBaseline = "middle";
-
-            this.ctx.fillText(this.value, this.copyx, this.copyy);
+            this.ctx.fillText(this.sumvalue, this.copyx, this.copyy);
+            if(this.summing) {
+                this.ctx.font = "bold 24px Arial";
+                this.ctx.fillStyle = this.strokeColor;
+                this.ctx.fillText("+", this.copyx, this.copyy - this.height / 2 - 10);
+            }
         }
     }
 
@@ -97,6 +103,7 @@ export class MatrixElement extends MatrixData {
             [min, max] = [max, min];
         }
         this.value = Math.floor(Math.random() * (max - min) + min);
+        this.sumvalue = this.value;
     }
 
     setSize(width, height) {
@@ -170,6 +177,7 @@ export class MatrixElement extends MatrixData {
 
     updateValue(value) {
         this.value = value;
+        this.sumvalue = value;
     }
 
     // setting colors of MatrixElement
@@ -193,7 +201,12 @@ export class MatrixElement extends MatrixData {
     }
     // setting color to lightblue when comparing
     setCompareColor() {
-        this.fillColor = '#F9B900'; // light blue for comparing
+        this.fillColor = this.orangeColor;
+        this.strokeColor = this.blackColor;
+    }
+
+    setCopyColor() {
+        this.fillColor = this.lightOrangeColor;
         this.strokeColor = this.blackColor;
     }
     //setting color to grey

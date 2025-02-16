@@ -40,17 +40,16 @@
 
         const step1 = () => {
             canvas.get("code").selected = [0];
-            canvas.copy( canvas.get("max"), canvas.get("A").elements[3][2]);
+            canvas.copy( canvas.get("A").elements[3][2], canvas.get("max"));
         }
 
         const step2 = () => {
             canvas.get("code").selected = [1];
+            canvas.sum( canvas.get("max"), canvas.get("A").elements[3][2]);
         }
 
         const sumAdd = () => {
-            let valueToAdd = canvas.get("A").elements[0][canvas.vars.index].value;
-            canvas.get("sum").value += valueToAdd;
-            return 200;
+            canvas.sum(canvas.get("A").elements[0][canvas.vars.index],canvas.get("sum"));
         };
 
         const sumIncrease = () => {
