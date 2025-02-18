@@ -37,7 +37,7 @@ export class MatrixElement extends MatrixData {
         this.greenColor = '#579F6E';
         this.orangeColor = '#F9B900';
         this.lightOrangeColor = '#FFDA99';
-        this.grayColor = '#999999';
+        this.grayColor = '#BBBBBB';
         this.blackColor = '#000';
         this.updateColor = "#9FD7B6";
 

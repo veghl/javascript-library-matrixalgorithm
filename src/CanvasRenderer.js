@@ -256,6 +256,58 @@ export class CanvasRenderer {
         }, 1000 / fps);
     }
 
+    swap(obj1, obj2) {
+        this.animating++;
+        obj1.changeable = false;
+        obj2.changeable = false;
+        const fps = this.fps;
+        const distance = Math.hypot(obj1.x - obj2.x, obj1.y - obj2.y);
+        let time = (distance * this.time) /100;
+        if(time > this.time){
+            time = this.time;
+        }
+        let frames = Math.floor(time * fps / 1000);
+        const dx = (obj2.x - obj1.x) / frames;
+        const dy = (obj2.y - obj1.y) / frames;
+        const strokeC = obj1.strokeColor;
+        const fillC = obj1.fillColor;
+        obj1.strokeColor = obj2.strokeColor;
+        obj1.fillColor = obj2.fillColor;
+        obj2.strokeColor = strokeC;
+        obj2.fillColor = fillC;
+        obj1.startCopy();
+        obj2.startCopy();
+        obj1.setGrayColor()
+        obj2.setGrayColor()
+        obj1.wasMoved = true;
+        obj2.wasMoved = true;
+        const intervalId = setInterval(() => {
+            frames--;
+            if (frames > 0) {
+                obj1.copyx += dx;
+                obj1.copyy += dy;
+                obj2.copyx -= dx;
+                obj2.copyy -= dy;
+            } else {
+                obj1.wasMoved = false;
+                obj2.wasMoved = false;
+                let tmp = obj2.value;
+                obj2.value = obj1.value;
+                obj1.value = tmp;
+                tmp = obj2.sumvalue;
+                obj2.sumvalue = obj1.sumvalue;
+                obj1.sumvalue = tmp;
+                obj1.copyx = obj1.x;
+                obj1.copyy = obj1.y;
+                obj2.copyx = obj2.x;
+                obj2.copyy = obj2.y;
+                clearInterval(intervalId);
+                this.animating--;
+            }
+        }, 1000 / fps);
+
+    }
+
     move(obj1, obj2) {
         this.animating++;
         obj1.changeable = false;
