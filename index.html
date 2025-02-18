@@ -12,22 +12,28 @@
         const max = new matrixvis.MatrixElement("max", 5, true, true);
         max.x = 70;
         max.y = 100;
-        max.setSize(50,50);
+        max.setSize(30,30);
         canvas.add(max, "max");
+
+        const min = new matrixvis.MatrixElement("min", 5, true, true);
+        min.x = 600;
+        min.y = 400;
+        min.setSize(30,30);
+        canvas.add(min, "min");
 
 
 
         const sum = new matrixvis.MatrixElement("sum", 0, false, true);
         sum.x = 75;
         sum.y = 175;
-        sum.setSize(50,50)
+        sum.setSize(30,30)
         canvas.add(sum, "sum");
 
         const A = new matrixvis.Matrix("A", [[0,0,0,0],[],[],[]], true);
         A.x = 200;
         A.y = 100;
-        A.setSize(50,50);
-        A.randomize(0,20);
+        A.setSize(30,30);
+        A.randomize(-10,20);
         canvas.add(A, "A");
 
         const code = new matrixvis.MatrixCode(["IF (MAX < A[0][0]) {",
@@ -40,7 +46,7 @@
 
         const step1 = () => {
             canvas.get("code").selected = [0];
-            canvas.copy( canvas.get("A").elements[3][2], canvas.get("max"));
+            canvas.move( canvas.get("A").elements[3][2], canvas.get("max"));
         }
 
         const step2 = () => {
@@ -50,7 +56,14 @@
 
         const sumAdd = () => {
             canvas.sum(canvas.get("A").elements[0][canvas.vars.index],canvas.get("sum"));
+
         };
+
+        const setGreen = () => {
+            canvas.get("A").elements[0][canvas.vars.index].setGreenColor();
+            canvas.move(canvas.get("max"), canvas.get("min"));
+
+        }
 
         const sumIncrease = () => {
             canvas.vars.index++;
@@ -77,7 +90,7 @@
         canvas.setSteps(
             [step1,
                 step2,
-                [sumAdd, sumIncrease],
+                [sumAdd, setGreen,sumIncrease],
                 sumCheck,
                 sumFinal,
                 sumFinal2]

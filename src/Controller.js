@@ -185,6 +185,18 @@ export class Controller {
     nextStepAnimation = () => {
         const mainCanvas = this.ctx.canvas.parent;
         if (mainCanvas.animating === 0 && !this.isWaiting && this.stepFunctions != null) {
+
+            for (const matrixItem of Object.values(mainCanvas.matrixItems)) {
+                if (matrixItem instanceof matrixvis.MatrixElement) {
+                    matrixItem.wasSumming = false; //
+                } else if (matrixItem instanceof matrixvis.Matrix) {
+                    for (let i = 0; i < matrixItem.elements.length; i++) {
+                        for (let j = 0; j < matrixItem.elements[i].length; j++) {
+                            matrixItem.elements[i][j].wasSumming = false; // ✅ Reset inside matrix
+                        }
+                    }
+                }
+            }
             if(this.autoNextStep !== 0){
                 this.reset.enabled = true;
                 if(!this.isPlaying){

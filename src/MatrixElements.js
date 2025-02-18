@@ -18,14 +18,18 @@ export class MatrixElement extends MatrixData {
         this.showLabel = showLabel;
         this.summing = false;
         this.sumvalue = value;
+        this.wasSumming = false;
+        this.wasMoved = false;
+
         this.copying = false;
         this.copyx = 0;
         this.copyy = 0;
         this.comparing = false;
         this.minSize = 30;
         this.maxSize = 100;
-        this.width = 35; //default width of the element
-        this.height = 35; //default height of the element
+        this.width = 30; //default width of the element
+        this.height = 30; //default height of the element
+
         this.fillColor = '#EEE';
         this.strokeColor = '#000';
 
@@ -47,7 +51,7 @@ export class MatrixElement extends MatrixData {
         this.ctx.fillStyle = this.fillColor;
         this.ctx.fillRect(this.x - this.width / 2, this.y - this.height / 2, this.width, this.height);
         this.ctx.setLineDash([])
-        this.ctx.strokeStyle = this.strokeColor;
+        this.ctx.strokeStyle = this.blackColor;
         this.ctx.strokeRect(this.x - this.width / 2 - 0.5, this.y - this.height / 2 - 0.5, this.width + 1, this.height + 1);
 
         this.ctx.fillStyle = this.strokeColor;
@@ -58,6 +62,7 @@ export class MatrixElement extends MatrixData {
         this.ctx.fillText(this.value, this.x, this.y);
 
         if (this.showLabel) {
+            this.ctx.fillStyle = this.blackColor;
             this.ctx.font = "12px Arial";
             this.ctx.textBaseline = "alphabetic";
             this.ctx.fillText(this.name, this.x, this.y - this.height /2 - 5);
@@ -79,18 +84,32 @@ export class MatrixElement extends MatrixData {
             this.ctx.fillStyle = this.orangeColor;
             this.ctx.fillRect(this.copyx - this.width  / 2, this.copyy - this.height / 2, this.width, this.height);
             this.ctx.setLineDash([5]);
-            this.ctx.strokeStyle = this.strokeColor;
+            this.ctx.strokeStyle = this.blackColor;
             this.ctx.strokeRect(this.copyx - this.width / 2 - 0.5, this.copyy - this.height / 2 - 0.5, this.width + 1, this.height + 1);
-
-            this.ctx.fillStyle = this.strokeColor;
-            this.ctx.font = "16px Arial";
-            this.ctx.textAlign = "center";
-            this.ctx.textBaseline = "middle";
-            this.ctx.fillText(this.sumvalue, this.copyx, this.copyy);
+            if(this.wasSumming){
+                this.ctx.fillStyle = this.blackColor;
+                this.ctx.font = "16px Arial";
+                this.ctx.textAlign = "center";
+                this.ctx.textBaseline = "middle";
+                this.ctx.fillText(this.sumvalue, this.copyx, this.copyy);
+            } else{
+                this.ctx.fillStyle = this.blackColor;
+                this.ctx.font = "16px Arial";
+                this.ctx.textAlign = "center";
+                this.ctx.textBaseline = "middle";
+                this.ctx.fillText(this.value, this.copyx, this.copyy);
+            }
             if(this.summing) {
-                this.ctx.font = "bold 24px Arial";
+                this.ctx.setLineDash([]);
+                this.ctx.beginPath();
+                this.ctx.arc(this.copyx - this.width / 2 - 10,  this.copyy, 7, 0, 2 * Math.PI, false);
+                this.ctx.fillStyle = this.orangeColor;
+                this.ctx.fill()
                 this.ctx.fillStyle = this.strokeColor;
-                this.ctx.fillText("+", this.copyx, this.copyy - this.height / 2 - 10);
+                this.ctx.stroke();
+                this.ctx.font = "20px Arial";
+                this.ctx.fillStyle = this.strokeColor;
+                this.ctx.fillText("+", this.copyx - this.width / 2 - 10, this.copyy);
             }
         }
     }
@@ -150,7 +169,11 @@ export class MatrixElement extends MatrixData {
     }
 
     stopCopy() {
-        if (this.copying) {
+        if (this.copying && this.wasMoved) {
+            this.fillColor = this.grayColor;
+            this.strokeColor = this.grayColor;
+            this.copying = false;
+        } else if (this.copying && !this.wasMoved) {
             this.fillColor = this.originalFillColor;
             this.strokeColor = this.originalStrokeColor;
             this.copying = false;
@@ -212,7 +235,7 @@ export class MatrixElement extends MatrixData {
     //setting color to grey
     setGrayColor() {
         this.fillColor = this.grayColor;
-        this.strokeColor = this.blackColor;
+        this.strokeColor = this.grayColor;
     }
 
     setUpdateColor() {

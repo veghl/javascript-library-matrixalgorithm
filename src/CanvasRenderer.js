@@ -83,8 +83,10 @@ export class CanvasRenderer {
                         obj.fillColor = obj.persistentColor;
                     } else if (obj.comparing) {
                         obj.setCompareColor();
-                    } else if (obj.copying) {
+                    } else if (obj.copying && !obj.wasMoved) {
                         obj.setCopyColor();
+                    } else if (obj.wasMoved) {
+                        obj.setGrayColor();
                     } else {
                         obj.setDefaultColor();
                     }
@@ -102,8 +104,10 @@ export class CanvasRenderer {
                                 obj.fillColor = obj.elements[i][j].persistentColor;
                             }else if (obj.elements[i][j].comparing) {
                                 obj.elements[i][j].setCompareColor();
-                            }else if (obj.elements[i][j].copying) {
+                            }else if (obj.elements[i][j].copying && !obj.elements[i][j].wasMoved) {
                                 obj.elements[i][j].setCopyColor();
+                            }else if (obj.elements[i][j].wasMoved) {
+                                obj.elements[i][j].setGrayColor();
                             }else {
                                 obj.elements[i][j].setDefaultColor();
                             }
@@ -223,8 +227,8 @@ export class CanvasRenderer {
             time = this.time;
         }
         let frames = Math.floor(time * fps /1000);
-        const dx = (obj2.x - obj1.x) / frames;
-        const dy = (obj2.y - obj1.y) / frames;
+        let dx = (obj2.x - obj1.x) / frames;
+        let dy = (obj2.y - obj1.y) / frames;
 
         const strokeC = obj1.strokeColor;
         const fillC = obj1.fillColor;
@@ -245,10 +249,53 @@ export class CanvasRenderer {
                 obj2.maxValue = obj1.maxValue;
                 obj2.strokeColor = strokeC;
                 obj2.fillColor = fillC;
+                obj2.wasMoved = false;
                 clearInterval(intervalId);
                 this.animating--;
             }
         }, 1000 / fps);
+    }
+
+    move(obj1, obj2) {
+        this.animating++;
+        obj1.changeable = false;
+        obj2.changeable = false;
+        const fps = this.fps;
+        const distance = Math.hypot(obj1.x - obj2.x, obj1.y - obj2.y);
+        let time = (distance * this.time) /100;
+        if(time > this.time){
+            time = this.time;
+        }
+        let frames = Math.floor(time * fps / 1000);
+        const dx = (obj2.x - obj1.x) / frames;
+        const dy = (obj2.y - obj1.y) / frames;
+        const strokeC = obj1.strokeColor;
+        const fillC = obj1.fillColor;
+        obj1.startCopy();
+        obj1.setGrayColor();
+        obj1.wasMoved = true;
+        const intervalId = setInterval(() => {
+            frames--;
+            if (frames > 0) {
+                obj1.copyx += dx;
+                obj1.copyy += dy;
+            } else {
+                obj1.copyx = obj2.x;
+                obj1.copyy = obj2.y;
+                obj2.value = obj1.value;
+                obj2.sumvalue = obj2.value;
+                obj2.minValue = obj1.minValue;
+                obj2.maxValue = obj1.maxValue;
+                obj2.strokeColor = strokeC;
+                obj2.fillColor = fillC;
+                obj2.wasMoved = false;
+                obj1.wasSumming = true;
+                obj1.value = 0;
+                clearInterval(intervalId);
+                this.animating--;
+            }
+        }, 1000 / fps);
+
     }
 
     sum(obj1, obj2) {
@@ -257,7 +304,7 @@ export class CanvasRenderer {
         obj2.changeable = false;
 
         const fps = this.fps;
-        const midX = obj2.x + obj2.width + 10;
+        const midX = obj2.x + obj2.width + 20;
         const midY = obj2.y;
         const distance1 = Math.hypot(midX - obj1.x, midY - obj1.y);
         const distance2 = Math.hypot(obj2.x - midX, obj2.y - midY);
@@ -303,8 +350,10 @@ export class CanvasRenderer {
                     obj2.value += obj1.value;
                     obj2.sumvalue = obj2.value;
                     obj1.sumvalue = obj2.value;
+                    obj1.wasSumming = true;
                     obj2.strokeColor = strokeC;
                     obj2.fillColor = fillC;
+                    obj2.wasMoved = false;
                     clearInterval(intervalId);
                     this.animating--;
                 }
