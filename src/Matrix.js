@@ -13,7 +13,13 @@ export class Matrix extends MatrixData {
         this.rows = values.length;
         this.cols = values[0].length;
         this.changeable = changeable;
+
         this.showIndexes = true;
+        this.rowIndexes = {};
+        this.colIndexes = {};
+        this.rowLoopMarkers = {};
+        this.colLoopMarkers = {};
+
 
         this.elements = this.createMatrix(values);
     }
@@ -42,6 +48,7 @@ export class Matrix extends MatrixData {
             this.ctx.fillText(i.toString(), x, y);
         }
 
+        //render elements
         for(let i = 0; i < this.elements.length; i++){
             for (let j = 0; j < this.elements[i].length; j++){
                 this.elements[i][j].ctx = this.ctx;
@@ -60,6 +67,8 @@ export class Matrix extends MatrixData {
         this.ctx.textBaseline = "middle";
         this.ctx.fillText(this.name, centerX, bottomY);
 
+        //render indexes
+
     }
 
     randomize = (min, max) => {
@@ -69,6 +78,41 @@ export class Matrix extends MatrixData {
                 element.randomize(min, max);
             }
         }
+    }
+
+    setRowIndexes(name, row , position = -1) {
+        this.rowIndexes = {"row": row, "position": position};
+    }
+
+    setColIndexes(name, col, position = -1) {
+        this.colIndexes = {"col": col, "position": position};
+    }
+
+    deleteIndexes(name) {
+        delete (this.rowIndexes[name]);
+        delete (this.colIndexes[name]);
+        delete (this.rowLoopMarkers[name]);
+        delete (this.colLoopMarkers[name]);
+    }
+
+    deleteAllIndexes() {
+        this.rowIndexes = {};
+        this.colIndexes = {};
+        this.rowLoopMarkers = {};
+        this.colLoopMarkers = {};
+    }
+
+    setRowLoopMarkers(name, from, to, reverse = false) {
+        this.rowLoopMarkers[name] = {"from": from, "to": to, "reverse": reverse};
+    }
+
+    setColLoopMarkers(name, from, to, reverse = false) {
+        this.colLoopMarkers[name] = {"from": from, "to": to, "reverse": reverse};
+    }
+
+    deleteLoopMarkers(name) {
+        delete this.colLoopMarkers[name];
+        delete this.rowLoopMarkers[name];
     }
 
     createMatrix(values) {
