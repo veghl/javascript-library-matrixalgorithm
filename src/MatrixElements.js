@@ -25,8 +25,8 @@ export class MatrixElement extends MatrixData {
         this.copyx = 0;
         this.copyy = 0;
         this.comparing = false;
-        this.minSize = 30;
-        this.maxSize = 100;
+        this.minSize = 35;
+        this.maxSize = 50;
         this.width = 30; //default width of the element
         this.height = 30; //default height of the element
 

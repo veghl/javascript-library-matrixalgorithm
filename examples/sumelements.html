@@ -39,15 +39,18 @@
 
     const thirdStep = () => {
       canvas.get("code").selected = [2];
+
     }
 
     const addStep = () => {
       canvas.get("code").selected = [3];
       canvas.sum(canvas.get("A").elements[canvas.vars.i][canvas.vars.j], canvas.get("sum"));
+        canvas.get("A").setColIndexes("j", canvas.vars.j,0);
     }
 
     const setGreenStep = () => {
       canvas.get("A").elements[canvas.vars.i][canvas.vars.j].setGreenColor();
+      return 200;
     }
 
     const increaseJ = () => {

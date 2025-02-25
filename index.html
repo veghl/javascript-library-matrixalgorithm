@@ -18,7 +18,7 @@
         const min = new matrixvis.MatrixElement("min", 5, true, true);
         min.x = 600;
         min.y = 400;
-        min.setSize(30,30);
+        min.setSize(35,35);
         canvas.add(min, "min");
 
 
@@ -26,13 +26,13 @@
         const sum = new matrixvis.MatrixElement("sum", 0, false, true);
         sum.x = 75;
         sum.y = 175;
-        sum.setSize(30,30)
+        sum.setSize(35,35)
         canvas.add(sum, "sum");
 
         const A = new matrixvis.Matrix("A", [[0,0,0,0],[],[],[]], true);
         A.x = 200;
         A.y = 100;
-        A.setSize(30,30);
+        A.setSize(35,35);
         A.randomize(-10,20);
         canvas.add(A, "A");
 
@@ -47,6 +47,9 @@
         const step1 = () => {
             canvas.get("code").selected = [0];
             canvas.swap( canvas.get("A").elements[3][2], canvas.get("max"));
+            canvas.get("A").setColIndexes("j", 1, 0);
+            canvas.get("A").setColIndexes("i", 4, 0);
+            console.log(canvas.get("A").elements[0][0].width)
         }
 
         const step2 = () => {

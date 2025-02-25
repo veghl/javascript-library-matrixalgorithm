@@ -19,6 +19,9 @@ export class Matrix extends MatrixData {
         this.colIndexes = {};
         this.rowLoopMarkers = {};
         this.colLoopMarkers = {};
+        this.indexesPos = 0;
+        this.indexStrokeC = '#000';
+        this.indexFillC = '#FFF';
 
 
         this.elements = this.createMatrix(values);
@@ -59,6 +62,58 @@ export class Matrix extends MatrixData {
             }
         }
 
+        for (let j = -1; j <= this.elements[0].length; j++) {
+            let maxIndexPos = -1;
+            let fixIndexPos = [];
+            for (let name in this.colIndexes){
+                if(this.colIndexes[name].value === j && this.colIndexes[name].position >= 0){
+                    fixIndexPos = fixIndexPos.concat([this.colIndexes[name].position]);
+                }
+            }
+            let indexNames = [];
+            for (const name in this.colIndexes){
+                indexNames = indexNames.concat([name]);
+            }
+            indexNames.sort();
+            for (let n = 0; n < indexNames.length; n++) {
+                if(this.colIndexes[indexNames[n]].value === j){
+                    let indexPos = this.indexesPos;
+                    if (this.colIndexes[indexNames[n]].position >= 0){
+                        indexPos = indexPos + 30 * this.colIndexes[indexNames[n]].position;
+                    } else {
+                        let k = 0;
+                        while (fixIndexPos.indexOf(k) > -1){
+                            k++
+                        }
+                        fixIndexPos = fixIndexPos.concat([k]);
+                        indexPos = fixIndexPos + 27 * k;
+                    }
+                    this.ctx.strokeStyle = this.indexStrokeC;
+                    this.ctx.fillStyle = this.indexFillC;
+                    this.ctx.beginPath();
+                    if(j >= 0 && j < this.elements[0].length ){
+                        this.ctx.arc(this.elements[0][j].x, this.elements[0][0].y - this.elements[0][0].height - (this.elements[0][0].height * 0.3) - indexPos - 3, 11.5,0,2 * Math.PI);
+                    } else if (j === -1){
+                        this.ctx.arc(this.elements[0][0].x - this.elements[0][0].width - 2,this.elements[0][0].y - this.elements[0][0].height - (this.elements[0][0].height * 0.3) - indexPos - 3, 11.5, 0, 2 * Math.PI);
+                    } else {
+                        this.ctx.arc(this.elements[0][this.elements[0].length - 1].x + this.elements[0][0].width + 2, this.elements[0][0].y - this.elements[0][0].height - (this.elements[0][0].height * 0.3) - indexPos - 3, 11.5, 0, 2 * Math.PI)
+                    }
+                    if (indexPos > maxIndexPos) {
+                        maxIndexPos = indexPos;
+                    }
+                    this.ctx.fill();
+                    this.ctx.stroke();
+                    this.ctx.fillStyle = this.indexStrokeC;
+                    this.ctx.font = "bold 12px Courier New";
+                    this.ctx.textAlign = "center";
+                    this.ctx.textBaseline = "alphabetic"
+                    if(j >= 0 && j < this.elements[0].length ){
+                        this.ctx.fillText(indexNames[n], this.elements[0][j].x, this.elements[0][0].y - this.elements[0][0].height - this.elements[0][0].height * 0.3 + indexPos);
+                    }
+                }
+            }
+        }
+
         const centerX = this.x + (this.cols - 1) * (this.elements[0][0].width + gap) / 2;
         const bottomY = this.y + this.rows * (this.elements[0][0].height + gap) - (this.elements[0][0].height / 5);
         this.ctx.fillStyle = "#888";
@@ -66,9 +121,6 @@ export class Matrix extends MatrixData {
         this.ctx.textAlign = "center";
         this.ctx.textBaseline = "middle";
         this.ctx.fillText(this.name, centerX, bottomY);
-
-        //render indexes
-
     }
 
     randomize = (min, max) => {
@@ -80,12 +132,12 @@ export class Matrix extends MatrixData {
         }
     }
 
-    setRowIndexes(name, row , position = -1) {
-        this.rowIndexes = {"row": row, "position": position};
+    setRowIndexes(name, value , position = -1) {
+        this.rowIndexes[name] = {"value": value, "position": position};
     }
 
-    setColIndexes(name, col, position = -1) {
-        this.colIndexes = {"col": col, "position": position};
+    setColIndexes(name, value, position = -1) {
+        this.colIndexes[name] = {"value": value, "position": position};
     }
 
     deleteIndexes(name) {
