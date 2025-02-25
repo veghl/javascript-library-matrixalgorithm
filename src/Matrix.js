@@ -62,44 +62,94 @@ export class Matrix extends MatrixData {
             }
         }
 
-        for (let j = -1; j <= this.elements[0].length; j++) {
-            let maxIndexPos = -1;
+        for (let i = -1; i <= this.elements.length; i++){
+            let maxOffset = -1;
             let fixIndexPos = [];
-            for (let name in this.colIndexes){
+            for (const name in this.rowIndexes){
+                if(this.rowIndexes[name].value === i && this.rowIndexes[name].position >= 0) {
+                    fixIndexPos = fixIndexPos.concat([this.rowIndexes[name].position]);
+                }
+            }
+            let indexNames = Object.keys(this.rowIndexes).sort();
+            for (let n = 0; n < indexNames.length; n++) {
+                if(this.rowIndexes[indexNames[n]].value === i){
+                    let currentOffset = this.indexesPos;
+                    if(this.rowIndexes[indexNames[n]].position >= 0){
+                        currentOffset = currentOffset + 30 * this.rowIndexes[indexNames[n]].position;
+                    } else {
+                        let availablePos = 0;
+                        while (fixIndexPos.indexOf(availablePos) > -1){
+                            availablePos++;
+                        }
+                        fixIndexPos = fixIndexPos.concat([availablePos]);
+                        currentOffset = this.indexesPos + 27 * availablePos;
+                    }
+                    this.ctx.strokeStyle = this.indexStrokeC;
+                    this.ctx.fillStyle = this.indexFillC;
+                    this.ctx.beginPath();
+                    if (i >= 0 && i < this.elements.length ){
+                        this.ctx.arc(this.elements[0][0].x - this.elements[0][0].width - (this.elements[0][0].height * 0.3) - currentOffset, this.elements[i][0].y, 11.5, 0, 2 * Math.PI);
+                    } else if (i === -1) {
+                        this.ctx.arc(this.elements[0][0].x - this.elements[0][0].width - (this.elements[0][0].height * 0.3) - currentOffset, this.elements[0][0].y - this.elements[0][0].height, 11.5, 0, 2 * Math.PI);
+                    } else {
+                        this.ctx.arc(this.elements[0][0].x - this.elements[0][0].width - (this.elements[0][0].height * 0.3) - currentOffset, this.elements[this.elements.length - 1][0].y + this.elements[0][0].height, 11.5, 0, 2 * Math.PI);
+                    }
+                    if (currentOffset > maxOffset) {
+                        maxOffset = currentOffset;
+                    }
+                    this.ctx.fill();
+                    this.ctx.stroke();
+                    this.ctx.fillStyle = this.indexStrokeC;
+                    this.ctx.font = "bold 12px Courier New";
+                    this.ctx.textAlign = "center";
+                    this.ctx.textBaseline = "alphabetic"
+                    if (i >= 0 && i < this.elements.length){
+                        this.ctx.fillText(indexNames[n], this.elements[0][0].x - this.elements[0][0].width - (this.elements[0][0].height * 0.3) - currentOffset, this.elements[i][0].y + 3);
+                    } else if (i === -1) {
+                        this.ctx.fillText(indexNames[n], this.elements[0][0].x - this.elements[0][0].width - (this.elements[0][0].height * 0.3) - currentOffset, this.elements[0][0].y - this.elements[0][0].height + 3);
+                    } else {
+                        this.ctx.fillText(indexNames[n], this.elements[0][0].x - this.elements[0][0].width - (this.elements[0][0].height * 0.3) - currentOffset, this.elements[this.elements.length - 1][0].y + this.elements[0][0].height + 3);
+                    }
+                }
+            }
+
+        }
+
+        for (let j = -1; j <= this.elements[0].length; j++) {
+            let maxOffset = -1;
+            let fixIndexPos = [];
+            for (const name in this.colIndexes){
                 if(this.colIndexes[name].value === j && this.colIndexes[name].position >= 0){
                     fixIndexPos = fixIndexPos.concat([this.colIndexes[name].position]);
                 }
             }
-            let indexNames = [];
-            for (const name in this.colIndexes){
-                indexNames = indexNames.concat([name]);
-            }
-            indexNames.sort();
+            let indexNames = Object.keys(this.colIndexes).sort();
+
             for (let n = 0; n < indexNames.length; n++) {
                 if(this.colIndexes[indexNames[n]].value === j){
-                    let indexPos = this.indexesPos;
+                    let currentOffset = this.indexesPos;
                     if (this.colIndexes[indexNames[n]].position >= 0){
-                        indexPos = indexPos + 30 * this.colIndexes[indexNames[n]].position;
+                        currentOffset = currentOffset + 30 * this.colIndexes[indexNames[n]].position;
                     } else {
-                        let k = 0;
-                        while (fixIndexPos.indexOf(k) > -1){
-                            k++
+                        let availablePos = 0;
+                        while (fixIndexPos.indexOf(availablePos) > -1){
+                            availablePos++;
                         }
-                        fixIndexPos = fixIndexPos.concat([k]);
-                        indexPos = fixIndexPos + 27 * k;
+                        fixIndexPos = fixIndexPos.concat([availablePos]);
+                        currentOffset = this.indexesPos + 27 * availablePos;
                     }
                     this.ctx.strokeStyle = this.indexStrokeC;
                     this.ctx.fillStyle = this.indexFillC;
                     this.ctx.beginPath();
                     if(j >= 0 && j < this.elements[0].length ){
-                        this.ctx.arc(this.elements[0][j].x, this.elements[0][0].y - this.elements[0][0].height - (this.elements[0][0].height * 0.3) - indexPos - 3, 11.5,0,2 * Math.PI);
+                        this.ctx.arc(this.elements[0][j].x, this.elements[0][0].y - this.elements[0][0].height - (this.elements[0][0].height * 0.3) - currentOffset - 3, 11.5,0,2 * Math.PI);
                     } else if (j === -1){
-                        this.ctx.arc(this.elements[0][0].x - this.elements[0][0].width - 2,this.elements[0][0].y - this.elements[0][0].height - (this.elements[0][0].height * 0.3) - indexPos - 3, 11.5, 0, 2 * Math.PI);
+                        this.ctx.arc(this.elements[0][0].x - this.elements[0][0].width - 2,this.elements[0][0].y - this.elements[0][0].height - (this.elements[0][0].height * 0.3) - currentOffset - 3, 11.5, 0, 2 * Math.PI);
                     } else {
-                        this.ctx.arc(this.elements[0][this.elements[0].length - 1].x + this.elements[0][0].width + 2, this.elements[0][0].y - this.elements[0][0].height - (this.elements[0][0].height * 0.3) - indexPos - 3, 11.5, 0, 2 * Math.PI)
+                        this.ctx.arc(this.elements[0][this.elements[0].length - 1].x + this.elements[0][0].width + 2, this.elements[0][0].y - this.elements[0][0].height - (this.elements[0][0].height * 0.3) - currentOffset - 3, 11.5, 0, 2 * Math.PI)
                     }
-                    if (indexPos > maxIndexPos) {
-                        maxIndexPos = indexPos;
+                    if (currentOffset > maxOffset) {
+                        maxOffset = currentOffset;
                     }
                     this.ctx.fill();
                     this.ctx.stroke();
@@ -108,7 +158,11 @@ export class Matrix extends MatrixData {
                     this.ctx.textAlign = "center";
                     this.ctx.textBaseline = "alphabetic"
                     if(j >= 0 && j < this.elements[0].length ){
-                        this.ctx.fillText(indexNames[n], this.elements[0][j].x, this.elements[0][0].y - this.elements[0][0].height - this.elements[0][0].height * 0.3 + indexPos);
+                        this.ctx.fillText(indexNames[n], this.elements[0][j].x, this.elements[0][0].y - this.elements[0][0].height - this.elements[0][0].height * 0.3 - currentOffset);
+                    } else if (j === -1){
+                        this.ctx.fillText(indexNames[n], this.elements[0][0].x - this.elements[0][0].width - 2, this.elements[0][0].y - this.elements[0][0].height - this.elements[0][0].height * 0.3 - currentOffset);
+                    } else {
+                        this.ctx.fillText(indexNames[n],this.elements[0][this.elements[0].length - 1].x + this.elements[0][0].width + 2, this.elements[0][0].y - this.elements[0][0].height - this.elements[0][0].height * 0.3 - currentOffset);
                     }
                 }
             }

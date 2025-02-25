@@ -12,7 +12,7 @@
         const max = new matrixvis.MatrixElement("max", 5, true, true);
         max.x = 70;
         max.y = 100;
-        max.setSize(30,30);
+        max.setSize(35,35);
         canvas.add(max, "max");
 
         const min = new matrixvis.MatrixElement("min", 5, true, true);
@@ -47,8 +47,10 @@
         const step1 = () => {
             canvas.get("code").selected = [0];
             canvas.swap( canvas.get("A").elements[3][2], canvas.get("max"));
+            canvas.get("A").setRowIndexes("tmp", 4, 0);
+            canvas.get("A").setRowIndexes("y", 1, 1);
             canvas.get("A").setColIndexes("j", 1, 0);
-            canvas.get("A").setColIndexes("i", 4, 0);
+            canvas.get("A").setColIndexes("i", 1, 1);
             console.log(canvas.get("A").elements[0][0].width)
         }
 
