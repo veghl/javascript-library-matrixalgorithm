@@ -22,6 +22,7 @@ export class Matrix extends MatrixData {
         this.indexesPos = 0;
         this.indexStrokeC = '#000';
         this.indexFillC = '#FFF';
+        this.loopC = "rgba(0, 0, 0, 0.3)"
 
 
         this.elements = this.createMatrix(values);
@@ -49,6 +50,162 @@ export class Matrix extends MatrixData {
             this.ctx.textAlign = "center";
             this.ctx.textBaseline = "middle";
             this.ctx.fillText(i.toString(), x, y);
+        }
+
+        for(const name in this.rowLoopMarkers){
+            if(this.rowIndexes.hasOwnProperty(name)){
+                let markerPos = 0;
+                if(this.rowIndexes[name].position >= 0){
+                    markerPos = this.rowIndexes[name].position;
+                } else {
+                    let fixIndexPos = [];
+                    for (const otherName in this.rowIndexes) {
+                        if(this.rowIndexes[name].value === this.rowIndexes[otherName].value && this.rowIndexes[name].position >= 0){
+                            fixIndexPos = fixIndexPos.concat([this.rowIndexes[name].position]);
+                        }
+                    }
+                    for (const otherName in this.rowIndexes) {
+                        if(this.rowIndexes[name].value === this.rowIndexes[otherName].value && this. rowIndexes[name].position < 0 && name > otherName){
+                            while(fixIndexPos.indexOf(markerPos) > -1) {
+                                markerPos++;
+                            }
+                            fixIndexPos = fixIndexPos.concat([markerPos]);
+                        }
+                    }
+                    while (fixIndexPos.indexOf(markerPos) > -1) {
+                        markerPos++;
+                    }
+                }
+                let startX, startY;
+                if (this.rowLoopMarkers[name].from >=0 && this.rowLoopMarkers[name].from < this.elements.length) {
+                    startX = this.elements[0][0].x - this.elements[0][0].width - (this.elements[0][0].width * 0.3) - this.indexesPos - 11.5 - 30  * markerPos;
+                    startY = this.elements[this.rowLoopMarkers[name].from][0].y;
+                } else if (this.rowLoopMarkers[name].from === -1){
+                    startX = this.elements[0][0].x - this.elements[0][0].width - (this.elements[0][0].width * 0.3) - this.indexesPos - 11.5 - 30  * markerPos;
+                    startY = this.elements[0][0].y - this.elements[0][0].height - 2;
+                } else {
+                    startX = this.elements[0][0].x - this.elements[0][0].width - (this.elements[0][0].width * 0.3) - this.indexesPos - 11.5 - 30  * markerPos;
+                    startY = this.elements[this.elements.length - 1][0].y + this.elements[0][0].height + 2;
+                }
+
+                let targetY;
+                if (this.rowLoopMarkers[name].to >= 0 && this.rowLoopMarkers[name].to < this.elements.length) {
+                    targetY = this.elements[this.rowLoopMarkers[name].to][0].y;
+                } else if (this.rowLoopMarkers[name].to === -1) {
+                    targetY = this.elements[0][0].y - this.elements[0][0].height - 2;
+                } else {
+                    targetY = this.elements[this.elements.length - 1][0].y + this.elements[0][0].height + 2;
+                }
+                const loopHeight = Math.abs(startY - targetY);
+                let isUpwardLoop = this.rowLoopMarkers[name].from > this.rowLoopMarkers[name].to;
+                if (this.rowLoopMarkers[name].from === this.rowLoopMarkers[name].to) {
+                    isUpwardLoop = this.rowLoopMarkers[name].backward;
+                }
+                if(isUpwardLoop){
+                    startY = targetY;
+                }
+                console.log(startX, startY);
+                this.ctx.strokeStyle = this.indexStrokeC;
+                this.ctx.fillStyle = this.indexFillC;
+                this.ctx.beginPath();
+                this.ctx.rect(startX, startY, 16, loopHeight);
+                this.ctx.fill();
+                this.ctx.stroke();
+                this.ctx.fillStyle = this.loopC;
+                const loopChar = isUpwardLoop ? "▲" : "▼";
+                const charSpacing = 18;
+                let textY = startY + charSpacing / 2;
+
+                while (textY < startY + loopHeight) {
+                    this.ctx.fillText(loopChar, startX + 8, textY);
+                    textY += charSpacing;
+                }
+            }
+        }
+
+        for (const name in this.colLoopMarkers){
+            if(this.colIndexes.hasOwnProperty(name)) {
+                let markerPos = 0;
+                if(this.colIndexes[name].position >= 0) {
+                    markerPos = this.colIndexes[name].position;
+                } else {
+                    let fixIndexPos = [];
+                    for (const otherName in this.colIndexes) {
+                        if(this.colIndexes[name].value === this.colIndexes[otherName].value && this.colIndexes[name].position >= 0){
+                            fixIndexPos = fixIndexPos.concat([this.colIndexes[otherName].position]);
+                        }
+                    }
+                    for (const otherName in this.colIndexes) {
+                        if(this.colIndexes[name].value === this.colIndexes[otherName].value && this.colIndexes[name].position < 0 && name > otherName) {
+                            while(fixIndexPos.indexOf(markerPos) > -1) {
+                                markerPos++;
+                            }
+                            fixIndexPos = fixIndexPos.concat([markerPos]);
+                        }
+                    }
+                    while (fixIndexPos.indexOf(markerPos) > -1) {
+                        markerPos++;
+                    }
+                }
+                let startX, startY;
+                if(this.colLoopMarkers[name].from >= 0 && this.colLoopMarkers[name].from < this.elements[0].length) {
+                    startX = this.elements[0][this.colLoopMarkers[name].from].x;
+                    startY = this.elements[0][0].y - this.elements[0][0].height - (this.elements[0][0].height * 0.3) - this.indexesPos - 11.5 - 30  * markerPos ;
+                } else if (this.colLoopMarkers[name].from === -1){
+                    startX = this.elements[0][0].x - this.elements[0][0].width - 2;
+                    startY = this.elements[0][0].y - this.elements[0][0].height - (this.elements[0][0].height * 0.3) - this.indexesPos - 11.5 - 30  * markerPos ;
+                } else {
+                    startX = this.elements[0][this.elements[0].length - 1].x + this.elements[0][0].width + 2;
+                    startY = this.elements[0][0].y - this.elements[0][0].height - (this.elements[0][0].height * 0.3) - this.indexesPos - 11.5 - 30  * markerPos ;
+                }
+
+                let targetX;
+                if(this.colLoopMarkers[name].to >= 0 && this.colLoopMarkers[name].to < this.elements[0].length) {
+                    targetX = this.elements[0][this.colLoopMarkers[name].to].x;
+                } else if (this.colLoopMarkers[name].to === -1){
+                    targetX = this.elements[0][0].x - this.elements[0][0].width - 2;
+                } else {
+                    targetX = this.elements[0][this.elements[0].length - 1].x + this.elements[0][0].width + 2;
+                }
+                const loopWidth = Math.abs(startX - targetX);
+                let isBackwardLoop = this.colLoopMarkers[name].from > this.colLoopMarkers[name].to;
+                if (this.colLoopMarkers[name].from === this.colLoopMarkers[name].to) {
+                    isBackwardLoop = this.colLoopMarkers[name].backward;
+                }
+                if (isBackwardLoop){
+                    startX = targetX;
+                }
+                this.ctx.strokeStyle = this.indexStrokeC;
+                this.ctx.fillStyle = this.indexFillC;
+                this.ctx.beginPath();
+                this.ctx.rect(startX, startY, loopWidth, 16);
+                this.ctx.fill();
+                this.ctx.stroke();
+                this.ctx.fillStyle = this.loopC;
+                let loopText = "►";
+                if(isBackwardLoop){
+                    loopText = "◄"
+                }
+                while(this.ctx.measureText(loopText + " >").width < loopWidth){
+                    if(!isBackwardLoop){
+                        loopText = loopText + " ►";
+                    } else {
+                        loopText = loopText + " ◄";
+                    }
+                }
+                this.ctx.fillText(loopText, startX + loopWidth/2, startY + 7.5);
+            }
+        }
+
+        for (const name in this.rowLoopMarkers){
+            if (this.rowLoopMarkers.hasOwnProperty(name)) {
+                let markerPos = 0;
+                if(this.rowIndexes[name].position >= 0) {
+                    markerPos = this.rowIndexes[name].position;
+                } else {
+
+                }
+            }
         }
 
         //render elements
@@ -82,17 +239,17 @@ export class Matrix extends MatrixData {
                             availablePos++;
                         }
                         fixIndexPos = fixIndexPos.concat([availablePos]);
-                        currentOffset = this.indexesPos + 27 * availablePos;
+                        currentOffset = this.indexesPos + 30 * availablePos;
                     }
                     this.ctx.strokeStyle = this.indexStrokeC;
                     this.ctx.fillStyle = this.indexFillC;
                     this.ctx.beginPath();
                     if (i >= 0 && i < this.elements.length ){
-                        this.ctx.arc(this.elements[0][0].x - this.elements[0][0].width - (this.elements[0][0].height * 0.3) - currentOffset, this.elements[i][0].y, 11.5, 0, 2 * Math.PI);
+                        this.ctx.arc(this.elements[0][0].x - this.elements[0][0].width - (this.elements[0][0].height * 0.3) - currentOffset - 3, this.elements[i][0].y, 11.5, 0, 2 * Math.PI);
                     } else if (i === -1) {
-                        this.ctx.arc(this.elements[0][0].x - this.elements[0][0].width - (this.elements[0][0].height * 0.3) - currentOffset, this.elements[0][0].y - this.elements[0][0].height, 11.5, 0, 2 * Math.PI);
+                        this.ctx.arc(this.elements[0][0].x - this.elements[0][0].width - (this.elements[0][0].height * 0.3) - currentOffset - 3, this.elements[0][0].y - this.elements[0][0].height, 11.5, 0, 2 * Math.PI);
                     } else {
-                        this.ctx.arc(this.elements[0][0].x - this.elements[0][0].width - (this.elements[0][0].height * 0.3) - currentOffset, this.elements[this.elements.length - 1][0].y + this.elements[0][0].height, 11.5, 0, 2 * Math.PI);
+                        this.ctx.arc(this.elements[0][0].x - this.elements[0][0].width - (this.elements[0][0].height * 0.3) - currentOffset - 3, this.elements[this.elements.length - 1][0].y + this.elements[0][0].height, 11.5, 0, 2 * Math.PI);
                     }
                     if (currentOffset > maxOffset) {
                         maxOffset = currentOffset;
@@ -104,11 +261,11 @@ export class Matrix extends MatrixData {
                     this.ctx.textAlign = "center";
                     this.ctx.textBaseline = "alphabetic"
                     if (i >= 0 && i < this.elements.length){
-                        this.ctx.fillText(indexNames[n], this.elements[0][0].x - this.elements[0][0].width - (this.elements[0][0].height * 0.3) - currentOffset, this.elements[i][0].y + 3);
+                        this.ctx.fillText(indexNames[n], this.elements[0][0].x - this.elements[0][0].width - (this.elements[0][0].height * 0.3) - currentOffset - 3, this.elements[i][0].y + 3);
                     } else if (i === -1) {
-                        this.ctx.fillText(indexNames[n], this.elements[0][0].x - this.elements[0][0].width - (this.elements[0][0].height * 0.3) - currentOffset, this.elements[0][0].y - this.elements[0][0].height + 3);
+                        this.ctx.fillText(indexNames[n], this.elements[0][0].x - this.elements[0][0].width - (this.elements[0][0].height * 0.3) - currentOffset - 3, this.elements[0][0].y - this.elements[0][0].height + 3);
                     } else {
-                        this.ctx.fillText(indexNames[n], this.elements[0][0].x - this.elements[0][0].width - (this.elements[0][0].height * 0.3) - currentOffset, this.elements[this.elements.length - 1][0].y + this.elements[0][0].height + 3);
+                        this.ctx.fillText(indexNames[n], this.elements[0][0].x - this.elements[0][0].width - (this.elements[0][0].height * 0.3) - currentOffset - 3, this.elements[this.elements.length - 1][0].y + this.elements[0][0].height + 3);
                     }
                 }
             }
@@ -136,7 +293,7 @@ export class Matrix extends MatrixData {
                             availablePos++;
                         }
                         fixIndexPos = fixIndexPos.concat([availablePos]);
-                        currentOffset = this.indexesPos + 27 * availablePos;
+                        currentOffset = this.indexesPos + 30 * availablePos;
                     }
                     this.ctx.strokeStyle = this.indexStrokeC;
                     this.ctx.fillStyle = this.indexFillC;
@@ -208,12 +365,12 @@ export class Matrix extends MatrixData {
         this.colLoopMarkers = {};
     }
 
-    setRowLoopMarkers(name, from, to, reverse = false) {
-        this.rowLoopMarkers[name] = {"from": from, "to": to, "reverse": reverse};
+    setRowLoopMarkers(name, from, to, backward = false) {
+        this.rowLoopMarkers[name] = {"from": from, "to": to, "backward": backward};
     }
 
-    setColLoopMarkers(name, from, to, reverse = false) {
-        this.colLoopMarkers[name] = {"from": from, "to": to, "reverse": reverse};
+    setColLoopMarkers(name, from, to, backward = false) {
+        this.colLoopMarkers[name] = {"from": from, "to": to, "backward": backward};
     }
 
     deleteLoopMarkers(name) {

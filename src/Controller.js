@@ -192,7 +192,7 @@ export class Controller {
                 } else if (matrixItem instanceof matrixvis.Matrix) {
                     for (let i = 0; i < matrixItem.elements.length; i++) {
                         for (let j = 0; j < matrixItem.elements[i].length; j++) {
-                            matrixItem.elements[i][j].wasSumming = false; // ✅ Reset inside matrix
+                            matrixItem.elements[i][j].wasSumming = false;
                         }
                     }
                 }

@@ -47,10 +47,13 @@
         const step1 = () => {
             canvas.get("code").selected = [0];
             canvas.swap( canvas.get("A").elements[3][2], canvas.get("max"));
-            canvas.get("A").setRowIndexes("tmp", 4, 0);
+            canvas.get("A").setRowIndexes("tmp", 0, 0);
+            canvas.get("A").setRowLoopMarkers("tmp", -1, 2)
             canvas.get("A").setRowIndexes("y", 1, 1);
             canvas.get("A").setColIndexes("j", 1, 0);
+            canvas.get("A").setColLoopMarkers("j", -1, 2);
             canvas.get("A").setColIndexes("i", 1, 1);
+            canvas.get("A").setColLoopMarkers("i", 0, 2);
             console.log(canvas.get("A").elements[0][0].width)
         }
 

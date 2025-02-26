@@ -30,6 +30,7 @@
 
     const firstStep = () => {
       canvas.get("code").selected = [0];
+      canvas.get("A").deleteAllIndexes();
     }
 
     const secondStep = () => {
@@ -40,6 +41,9 @@
     const thirdStep = () => {
       canvas.get("code").selected = [2];
       canvas.get("A").setRowIndexes("i", canvas.vars.i);
+      canvas.get("A").setRowLoopMarkers("i", 0, 2)
+      canvas.get("A").setColIndexes("j", canvas.vars.j);
+      canvas.get("A").setColLoopMarkers("j", 2, 0);
     }
 
     const addStep = () => {
