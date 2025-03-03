@@ -1,17 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Sum Matrix Elements</title>
-
+  <meta charset="UTF-8">
+  <title>Title</title>
   <script type="module">
     import {matrixvis} from "../src/index.js";
     const canvas = new matrixvis.CanvasRenderer("sumCanvas");
-    const sum = new matrixvis.MatrixElement("sum", 0, false, true);
-    sum.x = 50;
-    sum.y = 100;
-    sum.setSize(50,50);
-    canvas.add(sum, "sum");
+    const min = new matrixvis.MatrixElement("min", 0, false, true);
+    min.x = 50;
+    min.y = 100;
+    min.setSize(50,50);
+    canvas.add(min, "min");
 
     const A = new matrixvis.Matrix("A", [[0,0,0],[],[]], true);
     A.x = 200;
@@ -20,7 +19,7 @@
     A.randomize(1,10);
     canvas.add(A,"A");
 
-    const code = new matrixvis.MatrixCode(["sum = 0", "FOR i = 0 to 2", " FOR y = 0 to 2", "    sum = sum + A[i][j]"]);
+    const code = new matrixvis.MatrixCode(["min = A[0][0]", "FOR i = 0 to 2", " FOR y = 0 to 2", "    IF min > A[i][j]","       min = A[i][j]" ]);
     code.x = 400;
     code.y = 100
     canvas.add(code, "code");
@@ -30,6 +29,7 @@
 
     const firstStep = () => {
       canvas.get("code").selected = [0];
+      canvas.copy(canvas.get("A").elements[0][0], canvas.get("min"))
       canvas.get("A").deleteAllIndexes();
     }
 
@@ -44,17 +44,22 @@
       canvas.get("code").selected = [2];
       canvas.get("A").setColIndexes("j", canvas.vars.j);
       canvas.get("A").setColLoopMarkers("j", 0, 2);
-    }
-
-    const addStep = () => {
-      canvas.get("code").selected = [3];
-      canvas.sum(canvas.get("A").elements[canvas.vars.i][canvas.vars.j], canvas.get("sum"));
-      canvas.get("A").setColIndexes("j", canvas.vars.j);
-    }
-
-    const setGreenStep = () => {
-      canvas.get("A").elements[canvas.vars.i][canvas.vars.j].setGreenColor();
+      canvas.vars.j++
       return 200;
+    }
+
+    const minCopyStep = () => {
+      if(canvas.get("min").value > canvas.get("A").elements[canvas.vars.i][canvas.vars.j].value){
+        canvas.get("code").selected = [3];
+        canvas.copy(canvas.get("A").elements[canvas.vars.i][canvas.vars.j], canvas.get("min"));
+      } else {
+        return 200;
+      }
+    }
+    const findMinCompare = function () {
+      canvas.get("code").selected = [3];
+      canvas.compare(canvas.get("min"), canvas.get("A").elements[canvas.vars.i][canvas.vars.j]);
+      canvas.get("A").setColIndexes("j", canvas.vars.j);
     }
 
     const increaseJ = () => {
@@ -80,17 +85,18 @@
     }
 
     const checkJ = () => {
-        return canvas.vars.j < canvas.get("A").elements[0].length
+      return canvas.vars.j < canvas.get("A").elements[0].length
     }
 
     const checkI = () => {
       return canvas.vars.i < canvas.get("A").elements.length
     }
 
-    const sumFinalStep = () => {
+    const minFinalStep = () => {
       canvas.stopComparingAndCopying();
       canvas.get("A").deleteAllIndexes();
       canvas.get("code").selected = [];
+      canvas.get("min").setGreenColor();
     }
 
 
@@ -98,16 +104,16 @@
             [firstStep,
               secondStep,
               thirdStep,
-              [[addStep, setGreenStep, increaseJ],
-              checkJ, increaseI],
+              [[findMinCompare,minCopyStep, increaseJ],
+                checkJ, increaseI],
               checkI,
-              sumFinalStep]
+              minFinalStep]
     )
 
   </script>
 </head>
 <body>
-  <h1>Sum Matrix Elements</h1>
-  <canvas id="sumCanvas" width="750" height="400" style="border:1px solid black"></canvas>
+<h1>Sum Matrix Elements</h1>
+<canvas id="sumCanvas" width="750" height="400" style="border:1px solid black"></canvas>
 </body>
 </html>
