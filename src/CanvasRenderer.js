@@ -229,6 +229,8 @@ export class CanvasRenderer {
         let frames = Math.floor(time * fps /1000);
         let dx = (obj2.x - obj1.x) / frames;
         let dy = (obj2.y - obj1.y) / frames;
+        let dw = (obj2.width - obj1.width) / frames;
+        let dh = (obj2.height - obj1.height) / frames;
 
         const strokeC = obj1.strokeColor;
         const fillC = obj1.fillColor;
@@ -240,9 +242,14 @@ export class CanvasRenderer {
             if (frames > 0) {
                 obj1.copyx += dx;
                 obj1.copyy += dy;
+                obj1.copyWidth += dw;
+                obj1.copyHeight += dh;
             } else {
                 obj1.copyx = obj2.x;
                 obj1.copyy = obj2.y;
+                obj1.copyWidth = obj2.width;
+                obj1.copyHeight = obj2.height;
+
                 obj2.value = obj1.value;
                 obj2.sumvalue = obj2.value;
                 obj2.minValue = obj1.minValue;
@@ -271,6 +278,12 @@ export class CanvasRenderer {
         const dy = (obj2.y - obj1.y) / frames;
         const strokeC = obj1.strokeColor;
         const fillC = obj1.fillColor;
+
+        const dw1 = (obj2.width - obj1.width) / frames;
+        const dh1 = (obj2.height - obj1.height) / frames;
+        const dw2 = -dw1; // Reverse for obj2
+        const dh2 = -dh1;
+
         obj1.strokeColor = obj2.strokeColor;
         obj1.fillColor = obj2.fillColor;
         obj2.strokeColor = strokeC;
@@ -281,6 +294,11 @@ export class CanvasRenderer {
         obj2.setGrayColor()
         obj1.wasMoved = true;
         obj2.wasMoved = true;
+
+        obj1.copyWidth = obj1.width;
+        obj1.copyHeight = obj1.height;
+        obj2.copyWidth = obj2.width;
+        obj2.copyHeight = obj2.height;
         const intervalId = setInterval(() => {
             frames--;
             if (frames > 0) {
@@ -288,6 +306,10 @@ export class CanvasRenderer {
                 obj1.copyy += dy;
                 obj2.copyx -= dx;
                 obj2.copyy -= dy;
+                obj1.copyWidth += dw1;
+                obj1.copyHeight += dh1;
+                obj2.copyWidth += dw2;
+                obj2.copyHeight += dh2;
             } else {
                 obj1.wasMoved = false;
                 obj2.wasMoved = false;
@@ -301,6 +323,11 @@ export class CanvasRenderer {
                 obj1.copyy = obj1.y;
                 obj2.copyx = obj2.x;
                 obj2.copyy = obj2.y;
+
+                obj1.copyWidth = obj1.width;
+                obj1.copyHeight = obj1.height;
+                obj2.copyWidth = obj2.width;
+                obj2.copyHeight = obj2.height;
                 clearInterval(intervalId);
                 this.animating--;
             }
@@ -321,19 +348,30 @@ export class CanvasRenderer {
         let frames = Math.floor(time * fps / 1000);
         const dx = (obj2.x - obj1.x) / frames;
         const dy = (obj2.y - obj1.y) / frames;
+        const dw = (obj2.width - obj1.width) / frames;
+        const dh = (obj2.height - obj1.height) / frames;
+
         const strokeC = obj1.strokeColor;
         const fillC = obj1.fillColor;
         obj1.startCopy();
         obj1.setGrayColor();
         obj1.wasMoved = true;
+
+        obj1.copyWidth = obj1.width;
+        obj1.copyHeight = obj1.height;
         const intervalId = setInterval(() => {
             frames--;
             if (frames > 0) {
                 obj1.copyx += dx;
                 obj1.copyy += dy;
+                obj1.copyWidth += dw;
+                obj1.copyHeight += dh;
             } else {
                 obj1.copyx = obj2.x;
                 obj1.copyy = obj2.y;
+                obj1.copyWidth = obj2.width;
+                obj1.copyHeight = obj2.height;
+
                 obj2.value = obj1.value;
                 obj2.sumvalue = obj2.value;
                 obj2.minValue = obj1.minValue;
@@ -373,6 +411,8 @@ export class CanvasRenderer {
         const dy1 = (midY - obj1.y) / frames1;
         const dx2 = (obj2.x - midX) / frames2;
         const dy2 = (obj2.y - midY) / frames2;
+        const dw1 = (obj2.width - obj1.width) / frames1;
+        const dh1 = (obj2.height - obj1.height) / frames1;
         const strokeC = obj1.strokeColor;
         const fillC = obj1.fillColor;
 
@@ -380,14 +420,20 @@ export class CanvasRenderer {
         obj1.startCopy();
         obj1.setCopyColor();
 
+        obj1.copyWidth = obj1.width;
+        obj1.copyHeight = obj1.height;
         let phase = 1;
         const intervalId = setInterval(() => {
             if (phase === 1) {
                 if (frames1 > 0) {
                     obj1.copyx += dx1;
                     obj1.copyy += dy1;
+                    obj1.copyWidth += dw1;
+                    obj1.copyHeight += dh1;
                     frames1--;
                 } else {
+                    obj1.copyWidth = obj2.width;
+                    obj1.copyHeight = obj2.height;
                     phase = 2;
                 }
             } else if (phase === 2) {
@@ -399,6 +445,9 @@ export class CanvasRenderer {
                 } else {
                     obj1.copyx = obj2.x;
                     obj1.copyy = obj2.y;
+                    obj1.copyWidth = obj2.width;
+                    obj1.copyHeight = obj2.height;
+
                     obj2.value += obj1.value;
                     obj2.sumvalue = obj2.value;
                     obj1.sumvalue = obj2.value;

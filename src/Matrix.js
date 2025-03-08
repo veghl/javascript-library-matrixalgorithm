@@ -417,6 +417,8 @@ export class Matrix extends MatrixData {
                 const element = this.elements[i][j];
                 element.width = width;
                 element.height = height;
+                element.copyWidth = width;
+                element.copyHeight = height;
             }
         }
     }

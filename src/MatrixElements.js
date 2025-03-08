@@ -24,7 +24,10 @@ export class MatrixElement extends MatrixData {
         this.copying = false;
         this.copyx = 0;
         this.copyy = 0;
+        this.copyWidth = 30;
+        this.copyHeight = 30;
         this.comparing = false;
+
         this.minSize = 35;
         this.maxSize = 50;
         this.width = 30; //default width of the element
@@ -82,10 +85,10 @@ export class MatrixElement extends MatrixData {
     copyRender() {
         if (this.copying) {
             this.ctx.fillStyle = this.orangeColor;
-            this.ctx.fillRect(this.copyx - this.width  / 2, this.copyy - this.height / 2, this.width, this.height);
+            this.ctx.fillRect(this.copyx - this.copyWidth  / 2, this.copyy - this.copyHeight / 2, this.copyWidth, this.copyHeight);
             this.ctx.setLineDash([5]);
             this.ctx.strokeStyle = this.blackColor;
-            this.ctx.strokeRect(this.copyx - this.width / 2 - 0.5, this.copyy - this.height / 2 - 0.5, this.width + 1, this.height + 1);
+            this.ctx.strokeRect(this.copyx - this.copyWidth / 2 - 0.5, this.copyy - this.copyHeight / 2 - 0.5, this.copyWidth + 1, this.copyHeight + 1);
             if(this.wasSumming){
                 this.ctx.fillStyle = this.blackColor;
                 this.ctx.font = "16px Arial";
@@ -102,14 +105,14 @@ export class MatrixElement extends MatrixData {
             if(this.summing) {
                 this.ctx.setLineDash([]);
                 this.ctx.beginPath();
-                this.ctx.arc(this.copyx - this.width / 2 - 10,  this.copyy, 7, 0, 2 * Math.PI, false);
+                this.ctx.arc(this.copyx - this.copyWidth / 2 - 10,  this.copyy, 7, 0, 2 * Math.PI, false);
                 this.ctx.fillStyle = this.orangeColor;
                 this.ctx.fill()
                 this.ctx.fillStyle = this.strokeColor;
                 this.ctx.stroke();
                 this.ctx.font = "20px Arial";
                 this.ctx.fillStyle = this.strokeColor;
-                this.ctx.fillText("+", this.copyx - this.width / 2 - 10, this.copyy);
+                this.ctx.fillText("+", this.copyx - this.copyWidth / 2 - 10, this.copyy);
             }
         }
     }
@@ -148,6 +151,8 @@ export class MatrixElement extends MatrixData {
         }
         this.height = height;
         this.width = width;
+        this.copyWidth = width;
+        this.copyHeight = height;
     }
 
     isOver = (x, y) => {

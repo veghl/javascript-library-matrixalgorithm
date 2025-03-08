@@ -12,7 +12,7 @@
         const max = new matrixvis.MatrixElement("max", 5, true, true);
         max.x = 70;
         max.y = 100;
-        max.setSize(35,35);
+        max.setSize(50,50);
         canvas.add(max, "max");
 
         const min = new matrixvis.MatrixElement("min", 5, true, true);
@@ -46,7 +46,7 @@
 
         const step1 = () => {
             canvas.get("code").selected = [0];
-            canvas.swap( canvas.get("A").elements[3][2], canvas.get("max"));
+            canvas.sum( canvas.get("A").elements[3][2], canvas.get("max"));
             canvas.get("A").setColIndexes("j", 1, 0);
             canvas.get("A").setColLoopMarkers("j", -1, 2);
             canvas.get("A").setColIndexes("i", 1, 1);
@@ -56,7 +56,7 @@
 
         const step2 = () => {
             canvas.get("code").selected = [1];
-            canvas.move( canvas.get("max"), canvas.get("A").elements[3][2]);
+            canvas.copy( canvas.get("max"), canvas.get("A").elements[3][2]);
         }
 
         const sumAdd = () => {
