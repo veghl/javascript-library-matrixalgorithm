@@ -51,24 +51,28 @@ export class Controller {
                         }
                         updateAttributes(value, target[key]);
                     } else {
-                        target[key] = value; // Try assigning the value
+                        target[key] = value;
                     }
                 } catch (err) {
-                    console.warn(`⚠️ Cannot update key: ${key} → Read-Only Error:`, err);
+                    console.warn(`Cannot update key: ${key} → Read-Only Error:`, err);
                 }
             });
         };
 
         const cleanProperties = (source, target) => {
             Object.keys(target).forEach((key) => {
-                if (typeof target[key] === 'object' && target[key] !== null) {
-                    if (source.hasOwnProperty(key)) {
-                        cleanProperties(source[key], target[key]); // Recursively clean objects
-                    } else {
-                        delete target[key]; // Remove attributes that don't exist in source
+                try {
+                    if (typeof target[key] === 'object' && target[key] !== null) {
+                        if (source.hasOwnProperty(key)) {
+                            cleanProperties(source[key], target[key]);
+                        } else {
+                            delete target[key];
+                        }
+                    } else if (!source.hasOwnProperty(key)) {
+                        delete target[key];
                     }
-                } else if (!source.hasOwnProperty(key)) {
-                    delete target[key]; // Remove non-existing attributes
+                } catch (err) {
+                    console.warn(`Cannot delete key: ${key} → Read-Only Error:`, err);
                 }
             });
         };
