@@ -47,7 +47,7 @@ export class Controller {
                 try {
                     if (typeof value === 'object' && value !== null) {
                         if (!target.hasOwnProperty(key)) {
-                            target[key] = Array.isArray(value) ? [] : {}; // Ensure missing objects are created
+                            target[key] = Array.isArray(value) ? [] : {};
                         }
                         updateAttributes(value, target[key]);
                     } else {
@@ -331,10 +331,10 @@ export class Controller {
         buttons.forEach(button => {
             if (button.width > 0) {
                 button.ctx = this.ctx;
-                button.x = currentX + button.width / 2; // Center each button
+                button.x = currentX + button.width / 2;
                 button.y = this.y;
                 button.render();
-                currentX += button.width + 10; // Move to next button position
+                currentX += button.width + 10;
             }
         });
     }

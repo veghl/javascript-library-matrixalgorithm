@@ -5,7 +5,7 @@
   <title>Title</title>
   <script type="module">
     import {matrixvis} from "../src/index.js";
-    const canvas = new matrixvis.CanvasRenderer("sumCanvas");
+    const canvas = new matrixvis.CanvasRenderer("minCanvas");
     const min = new matrixvis.MatrixElement("min", 0, false, true);
     min.x = 50;
     min.y = 100;
@@ -114,6 +114,6 @@
 </head>
 <body>
 <h1>Sum Matrix Elements</h1>
-<canvas id="sumCanvas" width="750" height="400" style="border:1px solid black"></canvas>
+<canvas id="minCanvas" width="750" height="400" style="border:1px solid black"></canvas>
 </body>
 </html>

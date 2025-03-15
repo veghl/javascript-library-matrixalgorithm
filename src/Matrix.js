@@ -31,26 +31,29 @@ export class Matrix extends MatrixData {
     render() {
         const indexOffset = 10;
         const gap = 1;
-        // render col indexes
-        for(let j = 0; j < this.cols; j++) {
-            const x = this.x + j * (this.elements[0][j].width + (gap / 2));
-            const y = this.y - (this.elements[0][0].height / 2 ) - indexOffset;
-            this.ctx.fillStyle = "#888";
-            this.ctx.font = "14px Arial";
-            this.ctx.textAlign = "center";
-            this.ctx.textBaseline = "middle";
-            this.ctx.fillText(j.toString(), x, y);
+        if(this.showIndexes){
+            // render col indexes
+            for(let j = 0; j < this.cols; j++) {
+                const x = this.x + j * (this.elements[0][j].width + (gap / 2));
+                const y = this.y - (this.elements[0][0].height / 2 ) - indexOffset;
+                this.ctx.fillStyle = "#888";
+                this.ctx.font = "14px Arial";
+                this.ctx.textAlign = "center";
+                this.ctx.textBaseline = "middle";
+                this.ctx.fillText(j.toString(), x, y);
+            }
+            // render row indexes
+            for (let i = 0; i < this.rows; i++) {
+                const x = this.x - (this.elements[0][0].width / 2 ) - indexOffset;
+                const y = this.y + i * (this.elements[i][0].height + (gap / 2));
+                this.ctx.fillStyle = "#888";
+                this.ctx.font = "14px Arial";
+                this.ctx.textAlign = "center";
+                this.ctx.textBaseline = "middle";
+                this.ctx.fillText(i.toString(), x, y);
+            }
         }
-        // render row indexes
-        for (let i = 0; i < this.rows; i++) {
-            const x = this.x - (this.elements[0][0].width / 2 ) - indexOffset;
-            const y = this.y + i * (this.elements[i][0].height + (gap / 2));
-            this.ctx.fillStyle = "#888";
-            this.ctx.font = "14px Arial";
-            this.ctx.textAlign = "center";
-            this.ctx.textBaseline = "middle";
-            this.ctx.fillText(i.toString(), x, y);
-        }
+
 
         for(const name in this.rowLoopMarkers){
             if(this.rowIndexes.hasOwnProperty(name)){
@@ -394,7 +397,7 @@ export class Matrix extends MatrixData {
     }
 
     setSize(width, height) {
-        const MAX_WIDTH = 50;   // example maximum width
+        const MAX_WIDTH = 50;
         const MAX_HEIGHT = 50;
 
         // check if width and height are specified and positive numbers
