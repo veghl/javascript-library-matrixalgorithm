@@ -425,4 +425,20 @@ export class Matrix extends MatrixData {
             }
         }
     }
+
+    setMinValue(value) {
+        for (let i = 0; i < this.elements.length; i++){
+            for (let j = 0; j < this.elements[i].length; j++){
+                this.elements[i][j].minValue = value;
+            }
+        }
+    }
+
+    setMaxValue(value) {
+        for (let i = 0; i < this.elements.length; i++){
+            for (let j = 0; j < this.elements[i].length; j++){
+                this.elements[i][j].maxValue = value;
+            }
+        }
+    }
 }

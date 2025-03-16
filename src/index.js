@@ -13,6 +13,5 @@ export const matrixvis = {
     Controller,
     MatrixData,
     MatrixCode,
-    MatrixButton,
+    MatrixButton
 }
-

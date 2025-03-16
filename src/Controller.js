@@ -84,6 +84,28 @@ export class Controller {
         console.log(matrixItems);
         console.log(mainCanvas.matrixItems);
         updateAttributes(matrixItems, mainCanvas.matrixItems);
+        Object.values(mainCanvas.matrixItems).forEach((item) => {
+            if (item instanceof matrixvis.MatrixCode) {
+                if (matrixItems[item.id] && Array.isArray(matrixItems[item.id].selected)) {
+                    item.selected = [...matrixItems[item.id].selected];
+                } else {
+                    item.selected = [];
+                }
+            }
+            if (item instanceof matrixvis.Matrix) {
+                if (matrixItems[item.id]) {
+                    item.rowIndexes = matrixItems[item.id].rowIndexes ? { ...matrixItems[item.id].rowIndexes } : {};
+                    item.colIndexes = matrixItems[item.id].colIndexes ? { ...matrixItems[item.id].colIndexes } : {};
+                    item.rowLoopMarkers = matrixItems[item.id].rowLoopMarkers ? { ...matrixItems[item.id].rowLoopMarkers } : {};
+                    item.colLoopMarkers = matrixItems[item.id].colLoopMarkers ? { ...matrixItems[item.id].colLoopMarkers } : {};
+                } else {
+                    item.rowIndexes = {};
+                    item.colIndexes = {};
+                    item.rowLoopMarkers = {};
+                    item.colLoopMarkers = {};
+                }
+            }
+        });
         this.functionIndex = JSON.parse(this.undo[stepNumber][2]);
         this.autoNextStep = this.undo[stepNumber][6];
     }

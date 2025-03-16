@@ -57,6 +57,17 @@ export class MatrixElement extends MatrixData {
         this.ctx.strokeStyle = this.blackColor;
         this.ctx.strokeRect(this.x - this.width / 2 - 0.5, this.y - this.height / 2 - 0.5, this.width + 1, this.height + 1);
 
+        if (this.comparing) {
+            this.ctx.fillStyle = "#FFF"
+            this.ctx.globalAlpha = 0.5;
+            const textSize = (this.width + this.height) /2;
+            this.ctx.font = "bold " + textSize + "px serif";
+            this.ctx.textAlign = "center";
+            this.ctx.textBaseline = "middle";
+            this.ctx.fillText("?", this.x, this.y);
+            this.ctx.globalAlpha = 1;
+        }
+
         this.ctx.fillStyle = this.strokeColor;
         this.ctx.font = "16px Arial";
         this.ctx.textAlign = "center";
@@ -69,16 +80,6 @@ export class MatrixElement extends MatrixData {
             this.ctx.font = "12px Arial";
             this.ctx.textBaseline = "alphabetic";
             this.ctx.fillText(this.name, this.x, this.y - this.height /2 - 5);
-        }
-        if (this.comparing) {
-            this.ctx.fillStyle = "#FFF"
-            this.ctx.globalAlpha = 0.5;
-            const textSize = (this.width + this.height) /2;
-            this.ctx.font = "bold " + textSize + "px serif";
-            this.ctx.textAlign = "center";
-            this.ctx.textBaseline = "middle";
-            this.ctx.fillText("?", this.x, this.y);
-            this.ctx.globalAlpha = 1;
         }
     }
 
