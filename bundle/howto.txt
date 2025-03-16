@@ -1,0 +1,10 @@
+1. Install Node.js - https://nodejs.org/
+2. Install esbuild from command line (cmd):
+
+ sh
+ npm install --global esbuild 
+
+3. Create bundle file:
+
+ cd "C:\GitHub\javascript-library-matrixalgorithm\src"
+ esbuild index.js --bundle --outfile=../bundle/matrixvis.js --format=iife --platform=browser
