@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Title</title>
+  <title>Min Search</title>
+</head>
+<body>
+<h2>Min Search</h2>
+  <canvas id="minCanvas" width="750" height="400" style="border:1px solid black"></canvas>
   <script type="module">
     import {matrixvis} from "../src/index.js";
     const canvas = new matrixvis.CanvasRenderer("minCanvas");
@@ -99,7 +103,6 @@
       canvas.get("min").setGreenColor();
     }
 
-
     canvas.setSteps(
             [firstStep,
               secondStep,
@@ -111,9 +114,5 @@
     )
 
   </script>
-</head>
-<body>
-<h1>Sum Matrix Elements</h1>
-<canvas id="minCanvas" width="750" height="400" style="border:1px solid black"></canvas>
 </body>
 </html>

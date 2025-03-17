@@ -3,102 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <title>JS Library Matrix Algorithm Visualization</title>
-
-
-    <script type="module">
-        import {matrixvis} from './src/index.js';
-
-        const canvas = new matrixvis.CanvasRenderer("myCanvas");
-        const max = new matrixvis.MatrixElement("max", 5, true, true);
-        max.x = 70;
-        max.y = 100;
-        max.setSize(50,50);
-        canvas.add(max, "max");
-
-        const min = new matrixvis.MatrixElement("min", 5, true, true);
-        min.x = 600;
-        min.y = 400;
-        min.setSize(35,35);
-        canvas.add(min, "min");
-
-        const sum = new matrixvis.MatrixElement("sum", 0, false, true);
-        sum.x = 75;
-        sum.y = 175;
-        sum.setSize(35,35)
-        canvas.add(sum, "sum");
-
-        const A = new matrixvis.Matrix("A", [[0,0,0,0],[],[],[]], true);
-        A.x = 200;
-        A.y = 100;
-        A.setSize(35,35);
-        A.randomize(-10,20);
-        canvas.add(A, "A");
-
-        const code = new matrixvis.MatrixCode(["IF (MAX < A[0][0]) {",
-                                                "       MAX = A[0][0] }"])
-        code.x = 400;
-        code.y = 150;
-        canvas.add(code, "code");
-
-        canvas.vars.index=0;
-
-        const step1 = () => {
-            canvas.get("code").selected = [0];
-            canvas.compare( canvas.get("A").elements[3][2], canvas.get("max"));
-            canvas.get("A").setColIndexes("j", 1, 0);
-            canvas.get("A").setColLoopMarkers("j", -1, 2);
-            canvas.get("A").setColIndexes("i", 1, 1);
-            canvas.get("A").setColLoopMarkers("i", 0, 2);
-            console.log(canvas.get("A").elements[0][0].width)
-        }
-
-        const step2 = () => {
-            canvas.get("code").selected = [0,1];
-            canvas.copy( canvas.get("max"), canvas.get("A").elements[3][2]);
-        }
-
-        const sumAdd = () => {
-            canvas.sum(canvas.get("A").elements[0][canvas.vars.index],canvas.get("sum"));
-        };
-
-        const setGreen = () => {
-            canvas.get("A").elements[0][canvas.vars.index].setGreenColor();
-        }
-
-        const sumIncrease = () => {
-            canvas.vars.index++;
-            if (sumCheck()) {
-                return 200;
-            } else {
-                return 0;
-            }
-        };
-
-        const sumCheck = () => {
-            return canvas.vars.index < canvas.get("A").elements[0].length;
-        }
-
-        const sumFinal = () => {
-            canvas.get("code").selected = [];
-            canvas.copy(canvas.get("sum"), canvas.get("max"));
-        }
-
-        const sumFinal2 = () => {
-            canvas.get("max").setGreenColor();
-        }
-
-        canvas.setSteps(
-            [step1,
-                step2,
-                [sumAdd, setGreen,sumIncrease],
-                sumCheck,
-                sumFinal,
-                sumFinal2]
-        )
-    </script>
 </head>
 <body>
   <h1>JS Library Matrix Algorithm Visualisation </h1>
-    <canvas id="myCanvas" width="750" height="500" style="border:1px solid black"></canvas>
+  <canvas id="myCanvas" width="750" height="500" style="border:1px solid black"></canvas>
+  <script type="module">
+      import {matrixvis} from './src/index.js';
+
+      const canvas = new matrixvis.CanvasRenderer("myCanvas");
+      const max = new matrixvis.MatrixElement("max", 5, true, true);
+      max.x = 70;
+      max.y = 100;
+      max.setSize(50,50);
+      canvas.add(max, "max");
+
+      const min = new matrixvis.MatrixElement("min", 5, true, true);
+      min.x = 600;
+      min.y = 400;
+      min.setSize(35,35);
+      canvas.add(min, "min");
+
+      const sum = new matrixvis.MatrixElement("sum", 0, false, true);
+      sum.x = 75;
+      sum.y = 175;
+      sum.setSize(35,35)
+      canvas.add(sum, "sum");
+
+      const A = new matrixvis.Matrix("A", [[0,0,0,0],[],[],[]], true);
+      A.x = 200;
+      A.y = 100;
+      A.setSize(35,35);
+      A.randomize(-10,20);
+      canvas.add(A, "A");
+
+      const code = new matrixvis.MatrixCode(["IF (MAX < A[0][0]) {",
+          "       MAX = A[0][0] }"])
+      code.x = 400;
+      code.y = 150;
+      canvas.add(code, "code");
+
+      canvas.vars.index=0;
+
+      const step1 = () => {
+          canvas.get("code").selected = [0];
+          canvas.get("A").setColIndexes("j", 1, 0);
+          canvas.get("A").setColLoopMarkers("j", -1, 2);
+          canvas.get("A").setColIndexes("i", 1, 1);
+          canvas.get("A").setColLoopMarkers("i", 0, 2);
+          canvas.get("max").setYellowColor();
+      }
+
+      const step2 = () => {
+          canvas.get("code").selected = [0,1];
+      }
+
+      const sumAdd = () => {
+          canvas.sum(canvas.get("A").elements[0][canvas.vars.index],canvas.get("sum"));
+      };
+
+      const setGreen = () => {
+          canvas.get("A").elements[0][canvas.vars.index].setGreenColor();
+      }
+
+      const sumIncrease = () => {
+          canvas.vars.index++;
+          if (sumCheck()) {
+              return 200;
+          } else {
+              return 0;
+          }
+      };
+
+      const sumCheck = () => {
+          return canvas.vars.index < canvas.get("A").elements[0].length;
+      }
+
+      const sumFinal = () => {
+          canvas.get("code").selected = [];
+          canvas.copy(canvas.get("sum"), canvas.get("max"));
+      }
+
+      const sumFinal2 = () => {
+          canvas.get("max").setGreenColor();
+      }
+
+      canvas.setSteps(
+          [step1,
+              step2,
+              [sumAdd, setGreen,sumIncrease],
+              sumCheck,
+              sumFinal,
+              sumFinal2]
+      )
+  </script>
 </body>
 </html>

@@ -81,8 +81,6 @@ export class Controller {
         updateAttributes(vars, mainCanvas.vars);
         cleanProperties(vars, mainCanvas.vars);
         const matrixItems= JSON.parse(this.undo[stepNumber][1]);
-        console.log(matrixItems);
-        console.log(mainCanvas.matrixItems);
         updateAttributes(matrixItems, mainCanvas.matrixItems);
         Object.values(mainCanvas.matrixItems).forEach((item) => {
             if (item instanceof matrixvis.MatrixCode) {
@@ -244,14 +242,12 @@ export class Controller {
             mainCanvas.showBendedArrow = [];
             mainCanvas.showDoubleArrow = [];
             mainCanvas.stopComparingAndCopying()
-            console.log(this.autoNextStep)
         }
 
         let i = 0;
         const stepsArray = [this.stepFunctions];
         const stepsCheck = [null];
         while (Array.isArray(stepsArray[i][this.functionIndex[i]])) {
-            console.log(stepsArray[i][this.functionIndex[i]])
             stepsCheck[i + 1] = stepsArray[i][this.functionIndex[i] + 1];
             stepsArray[i + 1] = stepsArray[i][this.functionIndex[i]];
             i++;
