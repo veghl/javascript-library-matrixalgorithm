@@ -34,6 +34,7 @@
       const firstStep = () => {
           canvas.get("code").selected = [0];
           canvas.get("A").deleteAllIndexes();
+          return 200;
       }
 
       const secondStep = () => {
@@ -47,6 +48,7 @@
           canvas.get("code").selected = [2];
           canvas.get("A").setColIndexes("j", canvas.vars.j);
           canvas.get("A").setColLoopMarkers("j", 0, 2);
+          return 200;
       }
 
       const addStep = () => {
@@ -95,7 +97,6 @@
           canvas.get("A").deleteAllIndexes();
           canvas.get("code").selected = [];
       }
-
 
       canvas.setSteps(
           [firstStep,

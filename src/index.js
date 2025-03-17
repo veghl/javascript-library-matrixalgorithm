@@ -15,3 +15,7 @@ export const matrixvis = {
     MatrixCode,
     MatrixButton
 }
+
+if (typeof window !== "undefined") {
+    window.matrixvis = matrixvis;
+}

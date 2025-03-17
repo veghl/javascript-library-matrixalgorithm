@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Min Search</title>
+    <meta charset="UTF-8">
+    <title>Max Search</title>
+  <script src="../bundle/matrixvis.js"></script>
 </head>
 <body>
-<h2>Min Search</h2>
-  <canvas id="minCanvas" width="750" height="400" style="border:1px solid black"></canvas>
-  <script type="module">
-    import {matrixvis} from "../src/index.js";
-    const canvas = new matrixvis.CanvasRenderer("minCanvas");
-    const min = new matrixvis.MatrixElement("min", 0, false, true);
-    min.x = 50;
-    min.y = 100;
-    min.setSize(50,50);
-    canvas.add(min, "min");
+  <h1>Max Search</h1>
+  <canvas id="maxCanvas" width="750" height="400" style="border:1px solid black"></canvas>
+  <script>
+    const canvas = new matrixvis.CanvasRenderer("maxCanvas");
+    const max = new matrixvis.MatrixElement("max", 0, false, true);
+    max.x = 50;
+    max.y = 100;
+    max.setSize(50,50);
+    canvas.add(max, "max");
 
     const A = new matrixvis.Matrix("A", [[0,0,0],[],[]], true);
     A.x = 200;
@@ -23,7 +23,7 @@
     A.randomize(1,10);
     canvas.add(A,"A");
 
-    const code = new matrixvis.MatrixCode(["min = A[0][0]", "FOR i = 0 to 2", " FOR y = 0 to 2", "    IF min > A[i][j]","       min = A[i][j]" ]);
+    const code = new matrixvis.MatrixCode(["max = A[0][0]", "FOR i = 0 to 2", " FOR y = 0 to 2", "    IF max < A[i][j]","       max = A[i][j]" ]);
     code.x = 400;
     code.y = 100
     canvas.add(code, "code");
@@ -33,7 +33,7 @@
 
     const firstStep = () => {
       canvas.get("code").selected = [0];
-      canvas.copy(canvas.get("A").elements[0][0], canvas.get("min"))
+      canvas.copy(canvas.get("A").elements[0][0], canvas.get("max"))
       canvas.get("A").deleteAllIndexes();
     }
 
@@ -52,17 +52,17 @@
       return 200;
     }
 
-    const minCopyStep = () => {
-      if(canvas.get("min").value > canvas.get("A").elements[canvas.vars.i][canvas.vars.j].value){
+    const maxCopyStep = () => {
+      if(canvas.get("max").value < canvas.get("A").elements[canvas.vars.i][canvas.vars.j].value){
         canvas.get("code").selected = [3];
-        canvas.copy(canvas.get("A").elements[canvas.vars.i][canvas.vars.j], canvas.get("min"));
+        canvas.copy(canvas.get("A").elements[canvas.vars.i][canvas.vars.j], canvas.get("max"));
       } else {
         return 200;
       }
     }
-    const findMinCompare = function () {
+    const findMaxCompare = function () {
       canvas.get("code").selected = [3];
-      canvas.compare(canvas.get("min"), canvas.get("A").elements[canvas.vars.i][canvas.vars.j]);
+      canvas.compare(canvas.get("max"), canvas.get("A").elements[canvas.vars.i][canvas.vars.j]);
       canvas.get("A").setColIndexes("j", canvas.vars.j);
     }
 
@@ -96,22 +96,23 @@
       return canvas.vars.i < canvas.get("A").elements.length
     }
 
-    const minFinalStep = () => {
+    const maxFinalStep = () => {
       canvas.stopComparingAndCopying();
       canvas.get("A").deleteAllIndexes();
       canvas.get("code").selected = [];
-      canvas.get("min").setGreenColor();
+      canvas.get("max").setGreenColor();
     }
 
     canvas.setSteps(
             [firstStep,
               secondStep,
               thirdStep,
-              [[findMinCompare,minCopyStep, increaseJ],
+              [[findMaxCompare,maxCopyStep, increaseJ],
                 checkJ, increaseI],
               checkI,
-              minFinalStep]
+              maxFinalStep]
     )
   </script>
+
 </body>
 </html>
