@@ -966,8 +966,6 @@
       updateAttributes(vars, mainCanvas.vars);
       cleanProperties(vars, mainCanvas.vars);
       const matrixItems = JSON.parse(this.undo[stepNumber][1]);
-      console.log(matrixItems);
-      console.log(mainCanvas.matrixItems);
       updateAttributes(matrixItems, mainCanvas.matrixItems);
       Object.values(mainCanvas.matrixItems).forEach((item) => {
         if (item instanceof matrixvis.MatrixCode) {
@@ -1118,13 +1116,11 @@
         mainCanvas.showBendedArrow = [];
         mainCanvas.showDoubleArrow = [];
         mainCanvas.stopComparingAndCopying();
-        console.log(this.autoNextStep);
       }
       let i = 0;
       const stepsArray = [this.stepFunctions];
       const stepsCheck = [null];
       while (Array.isArray(stepsArray[i][this.functionIndex[i]])) {
-        console.log(stepsArray[i][this.functionIndex[i]]);
         stepsCheck[i + 1] = stepsArray[i][this.functionIndex[i] + 1];
         stepsArray[i + 1] = stepsArray[i][this.functionIndex[i]];
         i++;
@@ -1401,12 +1397,10 @@
       this.value = value;
       this.sumvalue = value;
     }
-    // setting colors of MatrixElement
     setDefaultColor() {
-      if (!this.persistentColor) {
-        this.fillColor = this.defaultColor;
-        this.strokeColor = this.blackColor;
-      }
+      this.persistentColor = null;
+      this.fillColor = this.defaultColor;
+      this.strokeColor = this.blackColor;
     }
     // setting color when object is changeable and mouse is over
     setDefaultOverColor() {
@@ -1420,7 +1414,6 @@
       this.strokeColor = "#000";
       this.persistentColor = this.greenColor;
     }
-    // setting color to lightblue when comparing
     setCompareColor() {
       this.fillColor = this.orangeColor;
       this.strokeColor = this.blackColor;
@@ -1429,7 +1422,6 @@
       this.fillColor = this.lightOrangeColor;
       this.strokeColor = this.blackColor;
     }
-    //setting color to grey
     setGrayColor() {
       this.fillColor = this.grayColor;
       this.strokeColor = this.grayColor;
@@ -1437,6 +1429,11 @@
     setUpdateColor() {
       this.fillColor = this.updateColor;
       this.strokeColor = "#000";
+    }
+    setOrangeColor() {
+      this.fillColor = this.orangeColor;
+      this.strokeColor = this.blackColor;
+      this.persistentColor = this.orangeColor;
     }
   };
 

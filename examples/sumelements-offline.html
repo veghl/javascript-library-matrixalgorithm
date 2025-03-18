@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Sum Matrix Elements</title>
-	<script src="../bundle/matrixvis.js"></script>
+  <script src="../bundle/matrixvis.js"></script>
 </head>
 <body>
-  <h1>Sum Matrix Elements</h1>
-  <canvas id="sumCanvas" width="750" height="400" style="border:1px solid black"></canvas>
+  <h1>Sum Elements</h1>
+  <canvas id="sumCanvas" width="650" height="400" style="border:1px solid black"></canvas>
   <script>
     const canvas = new matrixvis.CanvasRenderer("sumCanvas");
     const sum = new matrixvis.MatrixElement("sum", 0, false, true);
@@ -34,6 +34,7 @@
     const firstStep = () => {
       canvas.get("code").selected = [0];
       canvas.get("A").deleteAllIndexes();
+      return 200;
     }
 
     const secondStep = () => {
@@ -47,6 +48,7 @@
       canvas.get("code").selected = [2];
       canvas.get("A").setColIndexes("j", canvas.vars.j);
       canvas.get("A").setColLoopMarkers("j", 0, 2);
+      return 200;
     }
 
     const addStep = () => {
@@ -83,7 +85,7 @@
     }
 
     const checkJ = () => {
-        return canvas.vars.j < canvas.get("A").elements[0].length
+      return canvas.vars.j < canvas.get("A").elements[0].length
     }
 
     const checkI = () => {
@@ -102,11 +104,11 @@
               secondStep,
               thirdStep,
               [[addStep, setGreenStep, increaseJ],
-              checkJ, increaseI],
+                checkJ, increaseI],
               checkI,
               sumFinalStep]
     )
-
   </script>
+
 </body>
 </html>

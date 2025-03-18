@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Title</title>
+    <meta charset="UTF-8">
+    <title>Min Search</title>
   <script src="../bundle/matrixvis.js"></script>
 </head>
 <body>
-<h1>Sum Matrix Elements</h1>
-<canvas id="minCanvas" width="750" height="400" style="border:1px solid black"></canvas>
-<script>
+  <h1>Min Search</h1>
+  <canvas id="minCanvas" width="650" height="400" style="border:1px solid black"></canvas>
+  <script>
     const canvas = new matrixvis.CanvasRenderer("minCanvas");
     const min = new matrixvis.MatrixElement("min", 0, false, true);
     min.x = 50;
@@ -103,7 +103,6 @@
       canvas.get("min").setGreenColor();
     }
 
-
     canvas.setSteps(
             [firstStep,
               secondStep,
@@ -113,7 +112,7 @@
               checkI,
               minFinalStep]
     )
-
   </script>
+
 </body>
 </html>

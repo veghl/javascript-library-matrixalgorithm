@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sort rows</title>
+  <script src="../bundle/matrixvis.js"></script>
+</head>
+<body>
+  <h1>Sort Rows</h1>
+  <canvas id="rSortCanvas" width="650" height="400" style="border:1px solid black"></canvas>
+  <script>
+    const canvas = new matrixvis.CanvasRenderer("rSortCanvas");
+
+    const A = new matrixvis.Matrix("A", [[0,0,0,0],[],[]], true);
+    A.x = 100;
+    A.y = 100;
+    A.setSize(50,50);
+    A.randomize(1,10);
+    canvas.add(A,"A");
+  </script>
+
+</body>
+</html>

@@ -30,23 +30,21 @@ export class MatrixElement extends MatrixData {
 
         this.minSize = 35;
         this.maxSize = 50;
-        this.width = 30; //default width of the element
-        this.height = 30; //default height of the element
+        this.width = 30;
+        this.height = 30;
 
         this.fillColor = '#EEE';
         this.strokeColor = '#000';
-
         this.defaultColor = '#EEE';
         this.greenColor = '#579F6E';
         this.orangeColor = '#F9B900';
         this.lightOrangeColor = '#FFDA99';
+        //this.yellowColor = '#F4D03F';
         this.grayColor = '#BBBBBB';
         this.blackColor = '#000';
         this.updateColor = "#9FD7B6";
-
         this.originalFillColor = "#EEE";
         this.originalStrokeColor = "#000";
-
         this.persistentColor = null;
     }
 
@@ -209,12 +207,10 @@ export class MatrixElement extends MatrixData {
         this.sumvalue = value;
     }
 
-    // setting colors of MatrixElement
     setDefaultColor() {
-        if(!this.persistentColor){
-            this.fillColor = this.defaultColor;
-            this.strokeColor = this.blackColor;
-        }
+        this.persistentColor = null;
+        this.fillColor = this.defaultColor;
+        this.strokeColor = this.blackColor;
     }
     // setting color when object is changeable and mouse is over
     setDefaultOverColor() {
@@ -228,24 +224,25 @@ export class MatrixElement extends MatrixData {
         this.strokeColor = '#000';
         this.persistentColor = this.greenColor;
     }
-    // setting color to lightblue when comparing
     setCompareColor() {
         this.fillColor = this.orangeColor;
         this.strokeColor = this.blackColor;
     }
-
     setCopyColor() {
         this.fillColor = this.lightOrangeColor;
         this.strokeColor = this.blackColor;
     }
-    //setting color to grey
     setGrayColor() {
         this.fillColor = this.grayColor;
         this.strokeColor = this.grayColor;
     }
-
     setUpdateColor() {
         this.fillColor = this.updateColor;
         this.strokeColor = '#000';
+    }
+    setOrangeColor() {
+        this.fillColor = this.orangeColor;
+        this.strokeColor = this.blackColor
+        this.persistentColor = this.orangeColor;
     }
 }
