@@ -33,14 +33,13 @@
 
         const firstStep = () => {
             canvas.get("code").selected = [0];
-            canvas.copy(canvas.get("A").elements[0][0], canvas.get("max"))
-            canvas.get("A").deleteAllIndexes();
+            canvas.copy(canvas.get("A").elements[0][0], canvas.get("max"));
         }
 
         const secondStep = () => {
             canvas.get("code").selected = [1];
             canvas.get("A").setRowIndexes("i", canvas.vars.i);
-            canvas.get("A").setRowLoopMarkers("i", 0, 2)
+            canvas.get("A").setRowLoopMarkers("i", 0, 2);
             return 200;
         }
 
@@ -48,7 +47,7 @@
             canvas.get("code").selected = [2];
             canvas.get("A").setColIndexes("j", canvas.vars.j);
             canvas.get("A").setColLoopMarkers("j", 0, 2);
-            canvas.vars.j++
+            canvas.vars.j++;
             return 200;
         }
 

@@ -38,7 +38,7 @@
       if (this.showRowIndexes) {
         for (let i = 0; i < this.rows; i++) {
           const x = this.x - this.elements[0][0].width / 2 - indexOffset;
-          const y = this.y + i * (this.elements[i][0].height + gap / 2);
+          const y = this.y + i * (this.elements[i][0].height + gap);
           this.ctx.fillStyle = "#888";
           this.ctx.font = "14px Arial";
           this.ctx.textAlign = "center";
@@ -48,7 +48,7 @@
       }
       if (this.showColIndexes) {
         for (let j = 0; j < this.cols; j++) {
-          const x = this.x + j * (this.elements[0][j].width + gap / 2);
+          const x = this.x + j * (this.elements[0][j].width + gap);
           const y = this.y - this.elements[0][0].height / 2 - indexOffset;
           this.ctx.fillStyle = "#888";
           this.ctx.font = "14px Arial";
@@ -108,7 +108,6 @@
           if (isUpwardLoop) {
             startY = targetY;
           }
-          console.log(startX, startY);
           this.ctx.strokeStyle = this.indexStrokeC;
           this.ctx.fillStyle = this.indexFillC;
           this.ctx.beginPath();
@@ -195,15 +194,6 @@
             }
           }
           this.ctx.fillText(loopText, startX + loopWidth / 2, startY + 7.5);
-        }
-      }
-      for (const name in this.rowLoopMarkers) {
-        if (this.rowLoopMarkers.hasOwnProperty(name)) {
-          let markerPos = 0;
-          if (this.rowIndexes[name].position >= 0) {
-            markerPos = this.rowIndexes[name].position;
-          } else {
-          }
         }
       }
       for (let i = 0; i < this.elements.length; i++) {
