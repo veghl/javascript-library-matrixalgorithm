@@ -36,6 +36,14 @@
       A.randomize(-10,20);
       canvas.add(A, "A");
 
+      const B = new matrixvis.Matrix("B", [[0,0,0,0,0]], true);
+      B.x = 200;
+      B.y = 300;
+      B.setSize(35,35);
+      B.randomize(0,10);
+      B.showRowIndexes = false;
+      canvas.add(B, "B");
+
       const code = new matrixvis.MatrixCode(["IF (MAX < A[0][0]) {",
           "       MAX = A[0][0] }"])
       code.x = 400;

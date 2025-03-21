@@ -14,7 +14,8 @@ export class Matrix extends MatrixData {
         this.cols = values[0].length;
         this.changeable = changeable;
 
-        this.showIndexes = true;
+        this.showRowIndexes = true;
+        this.showColIndexes = true;
         this.rowIndexes = {};
         this.colIndexes = {};
         this.rowLoopMarkers = {};
@@ -31,18 +32,7 @@ export class Matrix extends MatrixData {
     render() {
         const indexOffset = 10;
         const gap = 1;
-        if(this.showIndexes){
-            // render col indexes
-            for(let j = 0; j < this.cols; j++) {
-                const x = this.x + j * (this.elements[0][j].width + (gap / 2));
-                const y = this.y - (this.elements[0][0].height / 2 ) - indexOffset;
-                this.ctx.fillStyle = "#888";
-                this.ctx.font = "14px Arial";
-                this.ctx.textAlign = "center";
-                this.ctx.textBaseline = "middle";
-                this.ctx.fillText(j.toString(), x, y);
-            }
-            // render row indexes
+        if(this.showRowIndexes){
             for (let i = 0; i < this.rows; i++) {
                 const x = this.x - (this.elements[0][0].width / 2 ) - indexOffset;
                 const y = this.y + i * (this.elements[i][0].height + (gap / 2));
@@ -51,6 +41,18 @@ export class Matrix extends MatrixData {
                 this.ctx.textAlign = "center";
                 this.ctx.textBaseline = "middle";
                 this.ctx.fillText(i.toString(), x, y);
+            }
+        }
+
+        if (this.showColIndexes){
+            for(let j = 0; j < this.cols; j++) {
+                const x = this.x + j * (this.elements[0][j].width + (gap / 2));
+                const y = this.y - (this.elements[0][0].height / 2 ) - indexOffset;
+                this.ctx.fillStyle = "#888";
+                this.ctx.font = "14px Arial";
+                this.ctx.textAlign = "center";
+                this.ctx.textBaseline = "middle";
+                this.ctx.fillText(j.toString(), x, y);
             }
         }
 
