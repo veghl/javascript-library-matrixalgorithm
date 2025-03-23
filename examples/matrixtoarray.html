@@ -4,10 +4,17 @@
     <meta charset="UTF-8">
     <title>Copy Matrix to Array</title>
   <script src="../bundle/matrixvis.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
 </head>
 <body>
-  <h2>Copy Matrix to Array</h2>
-  <canvas id="copyCanvas" width="650" height="400" style="border:1px solid black"></canvas>
+<div class="container">
+    <div class="row justify-content-center text-center">
+        <div class="col-12 mt-4">
+            <h2 class="mb-4" style="text-align: center;">Copy Matrix to Array</h2>
+            <canvas id="copyCanvas" width="650" height="400" style="border:1px solid black; display: block; margin-left: auto; margin-right: auto;"></canvas>
+        </div>
+    </div>
+</div>
   <script>
     const canvas = new matrixvis.CanvasRenderer("copyCanvas");
     const A = new matrixvis.Matrix("A", [[0,0,0],[],[]], true);

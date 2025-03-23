@@ -4,10 +4,17 @@
     <meta charset="UTF-8">
     <title>Min Search</title>
   <script src="../bundle/matrixvis.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
 </head>
 <body>
-  <h1>Min Search</h1>
-  <canvas id="minCanvas" width="650" height="400" style="border:1px solid black"></canvas>
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-12 mt-4">
+                <h2 class="mb-4" style="text-align: center;">Min Search</h2>
+                <canvas id="minCanvas" width="650" height="400" style="border:1px solid black; display: block; margin-left: auto; margin-right: auto;"></canvas>
+            </div>
+        </div>
+    </div>
   <script>
     const canvas = new matrixvis.CanvasRenderer("minCanvas");
     const min = new matrixvis.MatrixElement("min", 0, false, true);
