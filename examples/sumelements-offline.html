@@ -4,10 +4,17 @@
     <meta charset="UTF-8">
     <title>Sum Matrix Elements</title>
   <script src="../bundle/matrixvis.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
 </head>
 <body>
-  <h1>Sum Elements</h1>
-  <canvas id="sumCanvas" width="650" height="400" style="border:1px solid black"></canvas>
+<div class="container">
+    <div class="row justify-content-center text-center">
+        <div class="col-12 mt-4">
+            <h2 class="mb-4"style="text-align: center;">Sum of Matrix Elements</h2>
+            <canvas id="sumCanvas" width="650" height="400" style="border:1px solid black; display: block; margin-left: auto; margin-right: auto;"></canvas>
+        </div>
+    </div>
+</div>
   <script>
     const canvas = new matrixvis.CanvasRenderer("sumCanvas");
     const sum = new matrixvis.MatrixElement("sum", 0, false, true);
@@ -15,7 +22,6 @@
     sum.y = 100;
     sum.setSize(50,50);
     canvas.add(sum, "sum");
-
     const A = new matrixvis.Matrix("A", [[0,0,0],[],[]], true);
     A.x = 200;
     A.y = 100;

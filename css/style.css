@@ -1,0 +1,47 @@
+/* Custom color */
+:root {
+    --main-green: #579F6E;
+}
+
+.bg-green {
+    background-color: var(--main-green) !important;
+}
+
+.text-green {
+    color: var(--main-green) !important;
+}
+
+/* Button styles */
+.btn-green {
+    background-color: var(--main-green);
+    border: none;
+    color: white;
+}
+
+.btn-green:hover {
+    background-color: #4b8c61;
+    color: white;
+}
+
+.btn-outline-green {
+    border: 2px solid var(--main-green);
+    color: var(--main-green);
+    background-color: transparent;
+}
+
+.btn-outline-green:hover {
+    background-color: var(--main-green);
+    color: white;
+}
+
+/* Sidebar styling */
+.sidebar .nav-link {
+    color: #333;
+    padding-left: 0;
+    margin: 8px 0;
+}
+
+.sidebar .nav-link:hover {
+    color: var(--main-green);
+    text-decoration: underline;
+}
