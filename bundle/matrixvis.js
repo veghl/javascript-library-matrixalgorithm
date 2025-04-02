@@ -108,7 +108,7 @@
           if (isUpwardLoop) {
             startY = targetY;
           }
-          this.ctx.strokeStyle = this.indexStrokeC;
+          this.ctx.strokeStyle = this.loopC;
           this.ctx.fillStyle = this.indexFillC;
           this.ctx.beginPath();
           this.ctx.rect(startX, startY, 16, loopHeight);
@@ -175,7 +175,7 @@
           if (isBackwardLoop) {
             startX = targetX;
           }
-          this.ctx.strokeStyle = this.indexStrokeC;
+          this.ctx.strokeStyle = this.loopC;
           this.ctx.fillStyle = this.indexFillC;
           this.ctx.beginPath();
           this.ctx.rect(startX, startY, loopWidth, 16);
@@ -227,7 +227,7 @@
               fixIndexPos = fixIndexPos.concat([availablePos]);
               currentOffset = this.indexesPos + 30 * availablePos;
             }
-            this.ctx.strokeStyle = this.indexStrokeC;
+            this.ctx.strokeStyle = this.loopC;
             this.ctx.fillStyle = this.indexFillC;
             this.ctx.beginPath();
             if (i >= 0 && i < this.elements.length) {
@@ -278,7 +278,7 @@
               fixIndexPos = fixIndexPos.concat([availablePos]);
               currentOffset = this.indexesPos + 30 * availablePos;
             }
-            this.ctx.strokeStyle = this.indexStrokeC;
+            this.ctx.strokeStyle = this.loopC;
             this.ctx.fillStyle = this.indexFillC;
             this.ctx.beginPath();
             if (j >= 0 && j < this.elements[0].length) {

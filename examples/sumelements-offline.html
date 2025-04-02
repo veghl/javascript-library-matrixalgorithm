@@ -10,7 +10,8 @@
 <div class="container">
     <div class="row justify-content-center text-center">
         <div class="col-12 mt-4">
-            <h2 class="mb-4"style="text-align: center;">Sum of Matrix Elements</h2>
+            <h2 class="mb-2" style="text-align: center;">Mátrix elemeinek összege</h2>
+            <p class="mb-4" style="text-align: center;">Összeadja a mátrix összes elemét és eltárolja az eredményt.</p>
             <canvas id="sumCanvas" width="650" height="400" style="border:1px solid black; display: block; margin-left: auto; margin-right: auto;"></canvas>
         </div>
     </div>
@@ -29,7 +30,7 @@
     A.randomize(1,10);
     canvas.add(A,"A");
 
-    const code = new matrixvis.MatrixCode(["sum = 0", "FOR i = 0 to 2", " FOR y = 0 to 2", "    sum = sum + A[i][j]"]);
+    const code = new matrixvis.MatrixCode(["sum = 0", "FOR i = 0 to 2", " FOR j = 0 to 2", "    sum = sum + A[i][j]"]);
     code.x = 400;
     code.y = 100
     canvas.add(code, "code");

@@ -10,7 +10,8 @@
     <div class="container">
         <div class="row justify-content-center text-center">
             <div class="col-12 mt-4">
-                <h2 class="mb-4" style="text-align: center;">Max Search</h2>
+                <h2 class="mb-2" style="text-align: center;">Maximum keresése</h2>
+                <p class="mb-4" style="text-align: center;">Megkeresi a legnagyobb elemet a mátrixban és elmenti azt.</p>
                 <canvas id="maxCanvas" width="650" height="400" style="border:1px solid black; display: block; margin-left: auto; margin-right: auto;"></canvas>
             </div>
         </div>
@@ -30,7 +31,7 @@
     A.randomize(1,10);
     canvas.add(A,"A");
 
-    const code = new matrixvis.MatrixCode(["max = A[0][0]", "FOR i = 0 to 2", " FOR y = 0 to 2", "    IF max < A[i][j]","       max = A[i][j]" ]);
+    const code = new matrixvis.MatrixCode(["max = A[0][0]", "FOR i = 0 to 2", " FOR j = 0 to 2", "    IF max < A[i][j]","       max = A[i][j]" ]);
     code.x = 400;
     code.y = 100
     canvas.add(code, "code");
