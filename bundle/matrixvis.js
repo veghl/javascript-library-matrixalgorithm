@@ -425,9 +425,6 @@
       this.canvas.addEventListener("mousemove", (e) => this.mouseMoveEvent(e));
       this.canvas.addEventListener("mousedown", (e) => this.mouseDownEvent(e));
       this.canvas.addEventListener("mouseup", (e) => this.mouseUpEvent(e));
-      this.showArrow = [];
-      this.showBendedArrow = [];
-      this.showDoubleArrow = [];
       this.animating = 0;
       this.time = 1e3;
       this.render = (e) => {
@@ -1099,15 +1096,9 @@
             JSON.stringify(mainCanvas.vars),
             JSON.stringify(mainCanvas.matrixItems),
             JSON.stringify(this.functionIndex),
-            JSON.stringify(mainCanvas.showArrow),
-            JSON.stringify(mainCanvas.showBendedArrow),
-            JSON.stringify(mainCanvas.showDoubleArrow),
             this.autoNextStep
           ]);
         }
-        mainCanvas.showArrow = [];
-        mainCanvas.showBendedArrow = [];
-        mainCanvas.showDoubleArrow = [];
         mainCanvas.stopComparingAndCopying();
       }
       let i = 0;

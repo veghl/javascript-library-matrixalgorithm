@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Transpose Matrix</title>
+    <script src="../bundle/matrixvis.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <div class="row justify-content-center text-center">
+        <div class="col-12 mt-4">
+            <h2 class="mb-2" style="text-align: center;">Mátrix transzponálás</h2>
+            <p class="mb-4" style="text-align: center;">Az alábbi animáció bemutatja, hogyan történik egy mátrix transzponálása.</p>
+            <canvas id="transCanvas" width="650" height="400" style="border:1px solid black; display: block; margin-left: auto; margin-right: auto;"></canvas>
+        </div>
+    </div>
+</div>
+<script>
+    const canvas = new matrixvis.CanvasRenderer("transCanvas");
+    canvas.controller.nextStep.width=0;
+    canvas.controller.prevStep.width=0;
+
+    const A = new matrixvis.Matrix("A", [[5, 27, 3, 41],
+                                        [50, 33, 15, 2],
+                                        [9, 13, 32, 44]], true);
+    A.x = 100;
+    A.y = 80;
+    A.setSize(45,45);
+    canvas.add(A, "A");
+
+    const B = new matrixvis.Matrix("B", [[0,0,0],[],[],[]], true);
+    B.x = 450;
+    B.y = 80;
+    B.setSize(45,45);
+    canvas.add(B, "B");
+
+    const code = new matrixvis.MatrixCode([
+        "for (int i=0; i<=2; i++) {",
+        "   for (int j=0; j<=3; j++) {",
+        "      B[j][i] = A[i][j];",
+        "   }",
+        "}"]);
+    code.x = 80;
+    code.y = 220;
+    canvas.add(code, "code");
+
+    canvas.vars.i = 0;
+    canvas.vars.j = 0;
+
+    const firstStep = () => {
+        canvas.get("code").selected = [0];
+        canvas.get("A").setRowIndexes("i", canvas.vars.i);
+        canvas.get("A").setRowLoopMarkers("i", 0, 2);
+        canvas.get("B").setColIndexes("i", canvas.vars.i);
+        canvas.get("B").setColLoopMarkers("i", 0, 2);
+    };
+
+    const secondStep = () => {
+        canvas.get("code").selected = [1];
+        canvas.vars.j = 0;
+        canvas.get("A").setColIndexes("j", canvas.vars.j);
+        canvas.get("A").setColLoopMarkers("j", 0, 3);
+        canvas.get("B").setRowIndexes("j", canvas.vars.j);
+        canvas.get("B").setRowLoopMarkers("j", 0, 3);
+    };
+
+    const copyStep = () => {
+        canvas.get("code").selected = [2];
+        canvas.copy(canvas.get("A").elements[canvas.vars.i][canvas.vars.j], canvas.get("B").elements[canvas.vars.j][canvas.vars.i]);
+    }
+
+    const increaseI = () =>{
+        canvas.get("B").elements[canvas.vars.j][canvas.vars.i].setGreenColor();
+        canvas.get("A").deleteIndexes("j");
+        canvas.get("B").deleteIndexes("j");
+        canvas.vars.i++;
+        if (canvas.vars.i<3) {
+            canvas.get("code").selected = [0];
+            canvas.get("A").setRowIndexes("i", canvas.vars.i);
+            canvas.get("B").setColIndexes("i", canvas.vars.i);
+        } else {
+            return 0;
+        }
+    };
+
+    const increaseJ = () => {
+        canvas.get("B").elements[canvas.vars.j][canvas.vars.i].setGreenColor();
+        canvas.get("code").selected = [1];
+        canvas.vars.j++;
+        canvas.get("A").setColIndexes("j", canvas.vars.j);
+        canvas.get("B").setRowIndexes("j", canvas.vars.j);
+    };
+
+
+    const checkJ = () => {
+        return canvas.vars.j<3;
+    };
+
+    const checkI = () => {
+        return canvas.vars.i<3;
+    };
+
+    const finalStep = () => {
+        canvas.get("code").selected = [];
+        canvas.get("A").deleteIndexes("i");
+    }
+
+    canvas.setSteps([
+        firstStep,
+        [
+            secondStep,
+            copyStep,
+            [
+                increaseJ,
+                copyStep
+            ],
+            checkJ,
+            increaseI
+        ],
+        checkI,
+        finalStep
+    ]);
+</script>
+
+</body>
+</html>

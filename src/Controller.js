@@ -232,15 +232,12 @@ export class Controller {
                     JSON.stringify(mainCanvas.vars),
                     JSON.stringify(mainCanvas.matrixItems),
                     JSON.stringify(this.functionIndex),
-                    JSON.stringify(mainCanvas.showArrow),
-                    JSON.stringify(mainCanvas.showBendedArrow),
-                    JSON.stringify(mainCanvas.showDoubleArrow),
                     this.autoNextStep
                 ]);
             }
-            mainCanvas.showArrow = [];
-            mainCanvas.showBendedArrow = [];
-            mainCanvas.showDoubleArrow = [];
+            //mainCanvas.showArrow = [];
+            //mainCanvas.showBendedArrow = [];
+            //mainCanvas.showDoubleArrow = [];
             mainCanvas.stopComparingAndCopying()
         }
 
