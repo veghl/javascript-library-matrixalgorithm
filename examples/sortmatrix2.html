@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+  <title>Matrix sort</title>
+  <script src="../bundle/matrixvis.js"></script>
+  <link rel="stylesheet" href="../css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+  <div class="row justify-content-center text-center">
+    <div class="col-12 mt-4">
+      <h2 class="mb-2" style="text-align: center;">Mátrix rendezése(mátrixban)</h2>
+      <p class="mb-4" style="text-align: center;">Az alábbi animáció bemutatja, hogyan rendezhetjük a tömb elemeit.</p>
+      <canvas id="sortCanvas" width="700" height="410" style="border:1px solid black; display: block; margin-left: auto; margin-right: auto;"></canvas>
+    </div>
+  </div>
+</div>
+
+<script>
+  const canvas = new matrixvis.CanvasRenderer("sortCanvas");
+  canvas.controller.nextStep.width=0;
+  canvas.controller.prevStep.width=0;
+  canvas.time = 600;
+
+  const A = new matrixvis.Matrix("A", [[0,0,0,0],[],[]], true);
+  A.x = 100;
+  A.y = 100;
+  A.setSize(40,40);
+  A.randomize(1,20);
+  canvas.add(A,"A");
+
+  const i = new matrixvis.MatrixElement("i", 0, false, true);
+  i.x = 75;
+  i.y = 250;
+  i.setSize(40,40);
+  canvas.add(i, "i");
+  const j = new matrixvis.MatrixElement("j", 0, false, true);
+  j.x = 200;
+  j.y = 250;
+  j.setSize(40,40);
+  canvas.add(j, "j");
+  const i1 = new matrixvis.MatrixElement("i1", 0, false, true);
+  i1.x = 50;
+  i1.y = 320;
+  i1.setSize(40,40);
+  canvas.add(i1, "i1");
+  const i2 = new matrixvis.MatrixElement("i2", 0, false, true);
+  i2.x = 100;
+  i2.y = 320;
+  i2.setSize(40,40);
+  canvas.add(i2, "i2");
+  const j1 = new matrixvis.MatrixElement("j1", 0, false, true);
+  j1.x = 175;
+  j1.y = 320;
+  j1.setSize(40,40);
+  canvas.add(j1, "j1");
+  const j2 = new matrixvis.MatrixElement("j2", 0, false, true);
+  j2.x = 225;
+  j2.y = 320;
+  j2.setSize(40,40);
+  canvas.add(j2, "j2");
+
+  const code = new matrixvis.MatrixCode([
+    "for (int i=0; i<3*4-1; i++) {",
+    "   int i1 = i / 4;",
+    "   int i2 = i % 4;",
+    "   for (int j=i+1; j<3*4; j++) {",
+    "      int j1 = j / 4;",
+    "      int j2 = i % 4;",
+    "      if (A[i1][i2] > A[j1][j2]) {",
+    "         int tmp = A[i1][i2];",
+    "         A[i1][i2] = A[j1][j2];",
+    "         A[j1][j2] = tmp;",
+    "      }",
+    "   }",
+    "}"
+  ]);
+  code.x = 350;
+  code.y = 50;
+  canvas.add(code, "code");
+
+  const firstStep = () => {
+    canvas.get("code").selected = [0];
+    canvas.vars.i = 0;
+    canvas.get("i").value = canvas.vars.i;
+    canvas.get("i").setOrangeColor();
+  }
+
+  const iCalculation = () => {
+    canvas.get("i").setDefaultColor();
+    canvas.get("code").selected = [1,2];
+    canvas.vars.i1 = Math.floor(canvas.vars.i / 4);
+    canvas.vars.i2 = canvas.vars.i % 4;
+    canvas.get("i1").value = canvas.vars.i1;
+    canvas.get("i2").value = canvas.vars.i2;
+    canvas.get("i1").setOrangeColor();
+    canvas.get("i2").setOrangeColor();
+    canvas.get("A").setRowIndexes("i1", canvas.vars.i1);
+    canvas.get("A").setColIndexes("i2", canvas .vars.i2);
+  }
+
+  const secondStep = () => {
+    canvas.get("i1").setDefaultColor();
+    canvas.get("i2").setDefaultColor();
+    canvas.get("code").selected = [3];
+    canvas.vars.j = canvas.vars.i + 1;
+    canvas.get("j").value = canvas.vars.j;
+    canvas.get("j").setOrangeColor();
+  };
+
+  const jCalculation = () => {
+    canvas.get("j").setDefaultColor();
+    canvas.get("code").selected = [4,5];
+    canvas.vars.j1 = Math.floor(canvas.vars.j / 4);
+    canvas.vars.j2 = canvas.vars.j % 4;
+    canvas.get("j1").value = canvas.vars.j1;
+    canvas.get("j2").value = canvas.vars.j2;
+    canvas.get("j1").setOrangeColor();
+    canvas.get("j2").setOrangeColor();
+    canvas.get("A").setRowIndexes("j1", canvas.vars.j1);
+    canvas.get("A").setColIndexes("j2", canvas.vars.j2);
+  }
+
+  const ifStep = () => {
+    canvas.get("j1").setDefaultColor();
+    canvas.get("j2").setDefaultColor();
+    canvas.get("code").selected = [6];
+    canvas.compare(canvas.get("A").elements[canvas.vars.i1][canvas.vars.i2], canvas.get("A").elements[canvas.vars.j1][canvas.vars.j2]);
+  }
+
+  const swapStep = () => {
+    if (canvas.get("A").elements[canvas.vars.i1][canvas.vars.i2].value > canvas.get("A").elements[canvas.vars.j1][canvas.vars.j2].value) {
+      canvas.get("code").selected = [7,8,9];
+      canvas.swap(canvas.get("A").elements[canvas.vars.i1][canvas.vars.i2], canvas.get("A").elements[canvas.vars.j1][canvas.vars.j2]);
+    } else {
+      return 0;
+    }
+  }
+
+  const secondStepInc = () => {
+    canvas.vars.j++;
+    if (canvas.vars.j<12) {
+      canvas.get("code").selected = [3];
+      canvas.get("j").value = canvas.vars.j;
+      canvas.get("j").setOrangeColor();
+    } else {
+      return 0;
+    }
+  };
+
+  const firstStepInc = () => {
+    canvas.get("A").elements[canvas.vars.i1][canvas.vars.i2].setGreenColor();
+    canvas.vars.i++;
+    if (canvas.vars.i<11) {
+      canvas.get("code").selected = [0];
+      canvas.get("i").value = canvas.vars.i;
+      canvas.get("i").setOrangeColor();
+    } else {
+      return 0;
+    }
+  };
+
+  const firstCheck = () => {
+    return canvas.vars.i<11;
+  };
+
+  const secondCheck = () => {
+    return canvas.vars.j<12;
+  };
+
+  const finalStep = () => {
+    canvas.get("A").elements[canvas.vars.j1][canvas.vars.j2].setGreenColor();
+    canvas.get("code").selected = [];
+    canvas.get("A").deleteIndexes("i1");
+    canvas.get("A").deleteIndexes("i2");
+    canvas.get("A").deleteIndexes("j1");
+    canvas.get("A").deleteIndexes("j2");
+  }
+
+
+    canvas.setSteps([
+      firstStep,[
+        iCalculation,
+        secondStep,[
+          jCalculation,
+          ifStep,
+          swapStep,
+          secondStepInc
+        ],
+        secondCheck,
+        firstStepInc
+      ],
+      firstCheck,
+      finalStep
+  ])
+</script>
+
+</body>
+</html>
