@@ -20,15 +20,14 @@ export class CanvasRenderer {
         this.canvas.addEventListener("mousedown", (e) => this.mouseDownEvent(e));
         this.canvas.addEventListener("mouseup", (e) => this.mouseUpEvent(e));
 
-        this.showArrow = [];
-        this.showBendedArrow = [];
-        this.showDoubleArrow = [];
+        //this.showArrow = [];
+        //this.showBendedArrow = [];
+        //this.showDoubleArrow = [];
         this.animating = 0;
         this.time = 1000;
 
         this.render = (e) => {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
             this.controller.render();
 
             for (const matrixItem of Object.values(this.matrixItems)) {
@@ -191,7 +190,6 @@ export class CanvasRenderer {
                     for (let i = 0; i < obj.elements.length; i++) {
                         for (let j = 0 ; j < obj.elements[i].length; j++){
                             if (obj.elements[i][j].changeable && obj.elements[i][j].isOver(mouseX, mouseY)) {
-                                console.log(obj.elements[i][j]);
                                 this.makeElementEditable(obj.elements[i][j]);
                             }
                         }
