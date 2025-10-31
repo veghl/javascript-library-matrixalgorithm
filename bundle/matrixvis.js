@@ -833,6 +833,8 @@
       const input = document.createElement("input");
       input.type = "number";
       input.value = element.value;
+	  input.min = element.minValue;
+	  input.max = element.maxValue;
       input.style.position = "absolute";
       const rect = this.canvas.getBoundingClientRect();
       input.style.left = `${rect.left + element.x - element.width / 2}px`;
@@ -851,8 +853,10 @@
       };
     };
     updateElementValue = (element, input) => {
-      const newValue = parseInt(input.value, 10);
+      var newValue = parseInt(input.value, 10);
       if (!isNaN(newValue)) {
+		if (newValue < element.minValue) { newValue = element.minValue; }
+		if (newValue > element.maxValue) { newValue = element.maxValue; }
         element.updateValue(newValue);
         element.setUpdateColor();
       }
