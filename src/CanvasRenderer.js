@@ -500,7 +500,7 @@ export class CanvasRenderer {
 
     updateElementValue = (element, input) => {
         var newValue = parseInt(input.value, 10);
-        if (!isNaN(newValue)) {
+        if (!isNaN(newValue) && element.changeable) {
 			if (newValue < element.minValue) { newValue = element.minValue; }
 			if (newValue > element.maxValue) { newValue = element.maxValue; }
             element.updateValue(newValue);
