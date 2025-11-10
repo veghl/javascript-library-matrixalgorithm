@@ -848,7 +848,7 @@
       };
       input.onkeydown = (e) => {
         if (e.key === "Enter") {
-          this.updateElementValue(element, input);
+          input.blur();
         }
       };
     };
