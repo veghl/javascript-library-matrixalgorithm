@@ -837,8 +837,8 @@
 	  input.max = element.maxValue;
       input.style.position = "absolute";
       const rect = this.canvas.getBoundingClientRect();
-      input.style.left = `${rect.left + element.x - element.width / 2}px`;
-      input.style.top = `${rect.top + element.y - element.height}px`;
+      input.style.left = `${rect.left + window.scrollX + element.x - element.width / 2}px`;
+      input.style.top = `${rect.top + window.scrollY + element.y - element.height}px`;
       input.style.width = `${element.width}px`;
       input.style.zIndex = 10;
       document.body.appendChild(input);
